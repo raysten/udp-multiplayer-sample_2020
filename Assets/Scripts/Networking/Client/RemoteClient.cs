@@ -1,17 +1,24 @@
 ﻿using System.Net;
+using Zenject;
 
-public class RemoteClient
+public class RemoteClient : IInitializable
 {
     private UdpConnection _connection;
     private MessageSerializer _serializer;
     private MessageProcessor _messageProcessor;
+	private PortFinder _portFinder;
 
-    public RemoteClient(MessageSerializer serializer, MessageProcessor messageProcessor)
+    public RemoteClient(MessageSerializer serializer, MessageProcessor messageProcessor, PortFinder portFinder)
     {
-        _connection = new UdpConnection(54128);
         _serializer = serializer;
         _messageProcessor = messageProcessor;
-    }
+		_portFinder = portFinder;
+	}
+
+	public void Initialize()
+	{
+		_connection = new UdpConnection(_portFinder.GetAvailablePort(54000));
+	}
 
     public void SendWelcomeMessage(IPAddress ip, int port)
     {

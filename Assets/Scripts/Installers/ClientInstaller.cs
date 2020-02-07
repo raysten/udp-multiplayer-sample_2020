@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -19,9 +20,10 @@ public class ClientInstaller : MonoInstaller
         InstallMessageHandlers();
         InstallSpawner();
         InstallPlayer();
+		InstallHelpers();
     }
 
-    private void InstallClient()
+	private void InstallClient()
     {
         Container.BindInterfacesAndSelfTo<RemoteClient>().AsSingle();
     }
@@ -54,4 +56,9 @@ public class ClientInstaller : MonoInstaller
     {
         Container.BindFactory<Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
     }
+
+	private void InstallHelpers()
+	{
+		Container.BindInterfacesAndSelfTo<PortFinder>().AsSingle();
+	}
 }
