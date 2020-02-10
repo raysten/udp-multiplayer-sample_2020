@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +11,8 @@ public class PlayerSpawner
         _factory = factory;
     }
 
-    public void SpawnPlayer()
+    public Player SpawnPlayer()
     {
-        _factory.Create();
+        return _factory.Create();
     }
 }

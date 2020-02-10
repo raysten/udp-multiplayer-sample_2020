@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
@@ -26,11 +26,11 @@ public class Server : IInitializable
         _connection.Listen(OnMessageReceived, _settings.timeout);
     }
 
-    public void RegisterClient(string clientId, IPEndPoint remote)
+    public void RegisterClient(string clientId, IPEndPoint remote, Player player)
     {
         if (!_connectedClients.ContainsKey(clientId))
         {
-            _connectedClients.Add(clientId, new ConnectedClient(remote));
+            _connectedClients.Add(clientId, new ConnectedClient(remote, player));
         }
     }
 

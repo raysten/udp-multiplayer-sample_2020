@@ -21,9 +21,8 @@ public class WelcomeMessageHandler : BaseHandler<WelcomeMessage>
 
 		if (!_server.HasClient(clientId))
 		{
-			//Debug.Log($"Connected client: {clientId}");
-			_server.RegisterClient(clientId, message.Sender);
-			_spawner.SpawnPlayer();
+			Player player = _spawner.SpawnPlayer();
+			_server.RegisterClient(clientId, message.Sender, player);
 		}
 		else
 		{
