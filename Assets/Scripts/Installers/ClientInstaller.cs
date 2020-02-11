@@ -55,6 +55,7 @@ public class ClientInstaller : MonoInstaller
 	private void InstallPlayer()
 	{
 		Container.BindFactory<Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+		Container.BindInterfacesAndSelfTo<PlayerInputSystem>().AsSingle();
 	}
 
 	private void InstallHelpers()

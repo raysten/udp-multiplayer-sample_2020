@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 {
-	private Server _server;
+	private PlayerRegistry _playerRegistry;
 
 	public PlayerInputMessageHandler(
 		MessageProcessor messageProcessor,
-		Server server
+		PlayerRegistry playerRegistry
 	) : base(messageProcessor)
 	{
-		_server = server;
+		_playerRegistry = playerRegistry;
 	}
 
-	public override void Handle(IUdpMessage message)
+	public override void Handle(PlayerInputMessage message)
 	{
-		// TODO: Get ConnectedClient and call move on its Player.
+		Player player = _playerRegistry.GetPlayerByUserName(message.Sender.ToString());
+		player.Move(message.GetMovement());
 	}
 }

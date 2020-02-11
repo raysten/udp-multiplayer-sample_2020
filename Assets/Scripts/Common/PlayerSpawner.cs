@@ -11,8 +11,11 @@ public class PlayerSpawner
         _factory = factory;
     }
 
-    public Player SpawnPlayer()
+    public Player SpawnPlayer(string userName)
     {
-        return _factory.Create();
+		Player p = _factory.Create();
+		p.UserName = userName;
+
+		return p;
     }
 }

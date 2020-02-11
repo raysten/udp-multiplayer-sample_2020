@@ -26,11 +26,11 @@ public class Server : IInitializable
         _connection.Listen(OnMessageReceived, _settings.timeout);
     }
 
-    public void RegisterClient(string clientId, IPEndPoint remote, Player player)
+    public void RegisterClient(string clientId, IPEndPoint remote)
     {
         if (!_connectedClients.ContainsKey(clientId))
         {
-            _connectedClients.Add(clientId, new ConnectedClient(remote, player));
+            _connectedClients.Add(clientId, new ConnectedClient(remote));
         }
     }
 

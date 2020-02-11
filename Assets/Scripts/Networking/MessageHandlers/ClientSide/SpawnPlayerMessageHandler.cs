@@ -1,4 +1,4 @@
-﻿public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
+public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 {
     private PlayerSpawner _spawner;
 
@@ -10,8 +10,8 @@
         _spawner = spawner;
     }
 
-    public override void Handle(IUdpMessage message)
+    public override void Handle(SpawnPlayerMessage message)
     {
-        _spawner.SpawnPlayer();
+        _spawner.SpawnPlayer(message.Sender.ToString());
     }
 }

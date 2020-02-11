@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -32,6 +32,7 @@ public class ServerInstaller : MonoInstaller
     private void InstallMessageHandlers()
     {
         Container.BindInterfacesAndSelfTo<WelcomeMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<PlayerInputMessageHandler>().AsSingle();
     }
 
     private void InstallSpawner()
@@ -42,5 +43,6 @@ public class ServerInstaller : MonoInstaller
     private void InstallPlayer()
     {
         Container.BindFactory<Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
     }
 }
