@@ -167,7 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scriptableObjectInstallers: []
+  _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 058d9cadc3ad2bb4596321274580d57f, type: 2}
   _monoInstallers:
   - {fileID: 72036270}
   _installerPrefabs: []
@@ -369,7 +370,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter server IP and port.
+  m_Text: Enter server IP and port
 --- !u!222 &222610354
 CanvasRenderer:
   m_ObjectHideFlags: 0

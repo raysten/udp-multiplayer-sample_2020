@@ -7,7 +7,7 @@ using Zenject;
 public class Server : IInitializable
 {
     private UdpConnection _connection;
-    private MessageProcessor _messageHandler;
+    private MessageProcessor _messageProcessor;
     private MessageSerializer _serializer;
     private Settings _settings;
 
@@ -15,7 +15,7 @@ public class Server : IInitializable
 
     public Server(MessageProcessor messageHandler, MessageSerializer serializer, Settings settings)
     {
-        _messageHandler = messageHandler;
+        _messageProcessor = messageHandler;
         _serializer = serializer;
         _settings = settings;
     }
@@ -55,7 +55,7 @@ public class Server : IInitializable
 
         if (message != null)
         {
-            _messageHandler.PushMessage(message);
+            _messageProcessor.AddMessage(message);
         }
 
         _connection.Listen(OnMessageReceived, _settings.timeout);

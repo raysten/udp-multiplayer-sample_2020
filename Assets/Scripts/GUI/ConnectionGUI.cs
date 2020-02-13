@@ -18,6 +18,7 @@ public class ConnectionGUI : IInitializable
 	public void Initialize()
 	{
 		_connectionButton.onClick.AddListener(Connect);
+		_inputField.text = "192.168.8.110:54120";
 	}
 
 	// TODO: Error handling. Currently I assume correct ip and port.

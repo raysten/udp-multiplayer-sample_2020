@@ -48,7 +48,7 @@ public class RemoteClient : IInitializable
 
 		if (message != null)
 		{
-			_messageProcessor.PushMessage(message);
+			_messageProcessor.AddMessage(message);
 		}
 
 		_connection.Listen(OnMessageReceived);

@@ -15,3 +15,5 @@ MonoBehaviour:
   serverConfiguration:
     port: 54120
     timeout: 5000
+  player:
+    speed: 4

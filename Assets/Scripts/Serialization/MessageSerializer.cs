@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -7,12 +7,15 @@ using UnityEngine;
 public class MessageSerializer
 {
     private MessageFactory _messageFactory;
+	private GameLoop _loop;
+
     private static readonly string HEADER_VERIFICATION = "chs";
 
-    public MessageSerializer(MessageFactory messageFactory)
+    public MessageSerializer(MessageFactory messageFactory, GameLoop loop)
     {
         _messageFactory = messageFactory;
-    }
+		_loop = loop;
+	}
 
     public byte[] IsValid(byte[] data)
     {
@@ -42,6 +45,7 @@ public class MessageSerializer
         writer.Write(HEADER_VERIFICATION, false);
         var cmdName = message.GetType().Name;
         writer.Write(cmdName);
+		writer.Write(_loop.GetTickIndex());
         message.Serialize(writer);
         var bytes = writer.Finalize();
 

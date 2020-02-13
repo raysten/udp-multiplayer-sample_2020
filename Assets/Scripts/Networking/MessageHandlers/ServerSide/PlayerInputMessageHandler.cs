@@ -14,9 +14,10 @@ public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 		_playerRegistry = playerRegistry;
 	}
 
+	// TODO: Allow only one PlayerInputMessage per client during one tick.
 	public override void Handle(PlayerInputMessage message)
 	{
 		Player player = _playerRegistry.GetPlayerByUserName(message.Sender.ToString());
-		player.Move(message.GetMovement());
+		player.Input = message.GetMovement();
 	}
 }

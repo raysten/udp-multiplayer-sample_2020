@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class PlayerInputSystem : ITickable
+public class PlayerInputSystem : IInitializable, IUpdatable
 {
 	private RemoteClient _client;
+	private GameLoop _loop;
 
-	public PlayerInputSystem(RemoteClient client)
+	public PlayerInputSystem(RemoteClient client, GameLoop loop)
 	{
 		_client = client;
+		_loop = loop;
 	}
 
-	public void Tick()
+	public void Initialize()
 	{
-		bool up = Input.GetKeyDown(KeyCode.W);
-		bool right = Input.GetKeyDown(KeyCode.D);
-		bool down = Input.GetKeyDown(KeyCode.S);
-		bool left = Input.GetKeyDown(KeyCode.A);
+		_loop.Subscribe(this);
+	}
+
+	public void Simulate(uint tickIndex)
+	{
+		bool up = Input.GetKey(KeyCode.W);
+		bool right = Input.GetKey(KeyCode.D);
+		bool down = Input.GetKey(KeyCode.S);
+		bool left = Input.GetKey(KeyCode.A);
 
 		if (up || right || down || left)
 		{

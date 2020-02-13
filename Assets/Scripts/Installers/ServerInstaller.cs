@@ -10,12 +10,18 @@ public class ServerInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
+		InstallGameLoop();
         InstallServer();
         InstallMessageScripts();
         InstallMessageHandlers();
         InstallSpawner();
         InstallPlayer();
     }
+
+	private void InstallGameLoop()
+	{
+		Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
+	}
 
     private void InstallServer()
     {
@@ -42,7 +48,7 @@ public class ServerInstaller : MonoInstaller
 
     private void InstallPlayer()
     {
-        Container.BindFactory<Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+        Container.BindFactory<float, Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
     }
 }

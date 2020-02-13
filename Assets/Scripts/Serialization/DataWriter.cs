@@ -17,6 +17,11 @@ public class DataWriter
         _writer.Write(value);
     }
 
+	public void Write(uint value)
+	{
+		_writer.Write(value);
+	}
+
 	public void Write(bool value)
 	{
 		_writer.Write(value);

@@ -4,32 +4,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class MessageProcessor : IFixedTickable
+public class MessageProcessor : IInitializable, IUpdatable
 {
+	private GameLoop _loop;
+
     private Dictionary<Type, List<IMessageHandler>> _handlers = new Dictionary<Type, List<IMessageHandler>>();
+	private Dictionary<uint, List<IUdpMessage>> _messages = new Dictionary<uint, List<IUdpMessage>>();
+	private Stack<IUdpMessage> _tickIgnoringMessages = new Stack<IUdpMessage>();
 
-    private Stack<IUdpMessage> _messages = new Stack<IUdpMessage>();
+	public MessageProcessor(GameLoop loop)
+	{
+		_loop = loop;
+	}
 
-    public void FixedTick()
+	public void Initialize()
+	{
+		_loop.Subscribe(this);
+	}
+
+	public void Simulate(uint tickIndex)
     {
-        while (_messages.Count > 0)
-        {
-            var message = _messages.Pop();
-            List<IMessageHandler> handlers = null;
+		while (_tickIgnoringMessages.Count > 0)
+		{
+			var message = _tickIgnoringMessages.Pop();
+			List<IMessageHandler> handlers1 = null;
 
-            if (_handlers.TryGetValue(message.GetType(), out handlers))
-            {
-                foreach (var r in handlers)
-                {
-                    r.Handle(message);
-                }
-            }
-        }
-    }
+			if (_handlers.TryGetValue(message.GetType(), out handlers1))
+			{
+				foreach (var r in handlers1)
+				{
+					r.Handle(message);
+				}
+			}
+		}
 
-    public void PushMessage(IUdpMessage message)
+		if (_messages.TryGetValue(tickIndex, out List<IUdpMessage> buffer))
+		{
+			for (int i = 0; i < buffer.Count; i++)
+			{
+				IUdpMessage message = buffer[i];
+
+				if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
+				{
+					foreach (var r in handlers)
+					{
+						r.Handle(message);
+					}
+				}
+			}
+		}
+	}
+
+    public void AddMessage(IUdpMessage message)
     {
-        _messages.Push(message);
+		// TODO:
+		if (message.GetType() != typeof(PlayerInputMessage))
+		{
+			_tickIgnoringMessages.Push(message);
+		}
+		else
+		{
+			if (_messages.TryGetValue(message.TickIndex, out List<IUdpMessage> buffer))
+			{
+				// TODO: Allow only one PlayerInputMessage per client during one tick.
+				buffer.Add(message);
+			}
+			else
+			{
+				_messages.Add(message.TickIndex, new List<IUdpMessage>() { message });
+			}
+		}
     }
 
     public void Register(Type type, IMessageHandler handler)
