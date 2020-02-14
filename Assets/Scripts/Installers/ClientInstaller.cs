@@ -11,6 +11,8 @@ public class ClientInstaller : MonoInstaller
 	private Button _connectButton;
 	[SerializeField]
 	private GameObject playerPrefab;
+	[SerializeField]
+	private GameLoop gameLoop;
 
 	public override void InstallBindings()
 	{
@@ -26,7 +28,7 @@ public class ClientInstaller : MonoInstaller
 
 	private void InstallGameLoop()
 	{
-		Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
+		Container.BindInterfacesAndSelfTo<GameLoop>().FromInstance(gameLoop).AsSingle();
 	}
 
 	private void InstallClient()

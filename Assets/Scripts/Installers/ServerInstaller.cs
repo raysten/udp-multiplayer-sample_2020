@@ -7,6 +7,8 @@ public class ServerInstaller : MonoInstaller
 {
     [SerializeField]
     private GameObject playerPrefab;
+	[SerializeField]
+	private GameLoop gameLoop;
 
     public override void InstallBindings()
     {
@@ -20,7 +22,7 @@ public class ServerInstaller : MonoInstaller
 
 	private void InstallGameLoop()
 	{
-		Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
+		Container.BindInterfacesAndSelfTo<GameLoop>().FromInstance(gameLoop).AsSingle();
 	}
 
     private void InstallServer()

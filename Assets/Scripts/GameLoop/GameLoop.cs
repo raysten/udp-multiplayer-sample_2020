@@ -1,35 +1,51 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class GameLoop : ITickable
+public class GameLoop : MonoBehaviour
 {
 	private Settings _settings;
 
-	private float _timeSinceLastTick;
 	private uint _tickIndex;
 	private List<IUpdatable> _subscribers = new List<IUpdatable>();
+	private WaitForSeconds _waitTickDelta = null;
 
-	public GameLoop(Settings settings)
+	[Inject]
+	public void Construct(Settings settings)
 	{
 		_settings = settings;
 	}
 
-	public void Tick()
+	private void FixedUpdate()
 	{
-		_timeSinceLastTick += Time.deltaTime;
+		Tick();
+	}
 
-		if (_timeSinceLastTick >= _settings.simulationRate)
+	private IEnumerator Loop()
+	{
+		while(true)
 		{
-			for (int i = 0; i < _subscribers.Count; i++)
+			Tick();
+
+			if (_waitTickDelta == null)
 			{
-				_subscribers[i].Simulate(_tickIndex);
+				_waitTickDelta = new WaitForSeconds(_settings.simulationRate);
 			}
 
-			_tickIndex++;
-			_timeSinceLastTick = 0;
+			yield return _waitTickDelta;
 		}
+	}
+
+	private void Tick()
+	{
+		for (int i = 0; i < _subscribers.Count; i++)
+		{
+			_subscribers[i].Simulate(_tickIndex);
+		}
+
+		_tickIndex++;
 	}
 
 	public void Subscribe(IUpdatable subscriber)
