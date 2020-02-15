@@ -49,6 +49,13 @@ public class Server : IInitializable
         }
     }
 
+	public void SendServerTickMessage(int tickOffset, uint receivedTick)
+	{
+		var message = new ServerTickMessage(tickOffset, receivedTick);
+		// TODO:
+		SendToAll(message);
+	}
+
     private void OnMessageReceived(IPEndPoint endpoint, byte[] bytes)
     {
         var message = _serializer.ParseMessage(endpoint, bytes);

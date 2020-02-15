@@ -53,6 +53,7 @@ public class ClientInstaller : MonoInstaller
 	private void InstallMessageHandlers()
 	{
 		Container.BindInterfacesAndSelfTo<SpawnPlayerMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ServerTickMessageHandler>().AsSingle();
 	}
 
 	private void InstallSpawner()

@@ -18,6 +18,8 @@ public class DebugScreen : MonoBehaviour
 
 	private void Update()
 	{
-		textBox.text = $"Tick: {_loop.GetTickIndex().ToString()}";
+		textBox.text = $"Tick: {_loop.GetTickIndex().ToString()}" +
+			$", offset: {_loop.clientToServerOffset}" +
+			$", dt: {Time.fixedDeltaTime}";
 	}
 }
