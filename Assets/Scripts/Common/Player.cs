@@ -12,11 +12,10 @@ public class Player : MonoBehaviour, IUpdatable
 	private float _speed;
 	[Inject]
 	private GameLoop _loop;
-
-	//private int tickCounter;
+	private Queue<InputData> _inputBuffer = new Queue<InputData>();
+	private Vector3 _input;
 
 	public string UserName { get; set; }
-	public Vector3 Input { get; set; }
 
 	public void Start()
 	{
@@ -25,19 +24,42 @@ public class Player : MonoBehaviour, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
-		if (Input != Vector3.zero)
+		// TODO: can it be cleaner?
+		if (_inputBuffer.Count > 0)
+		{
+			var firstInputInBuffer = _inputBuffer.Peek();
+
+			if (firstInputInBuffer.tickIndex == tickIndex)
+			{
+				_inputBuffer.Dequeue();
+				_input = firstInputInBuffer.input;
+			}
+			else if (firstInputInBuffer.tickIndex < tickIndex)
+			{
+				_inputBuffer.Dequeue();
+			}
+		}
+
+		if (_input != Vector3.zero)
 		{
 			Debug.Log($"Moving player on tick {tickIndex}");
 		}
 
-		Move(Input);
-		Input = Vector3.zero;
-		//tickCounter++;
+		Move(_input);
+		_input = Vector3.zero;
+	}
+
+	public void BufferInput(InputData inputData)
+	{
+		if (inputData.tickIndex >= _loop.GetTickIndex())
+		{
+			_inputBuffer.Enqueue(inputData);
+		}
 	}
 
 	private void Move(Vector3 motion)
 	{
-		controller.Move(motion.normalized * Time.deltaTime * _speed);
+		controller.Move(motion.normalized * Time.fixedDeltaTime * _speed);
 	}
 
 	public class Factory : PlaceholderFactory<float, Player>

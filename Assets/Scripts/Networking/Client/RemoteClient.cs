@@ -10,6 +10,9 @@ public class RemoteClient : IInitializable
 	private IPAddress _serverIp;
 	private int _serverPort;
 
+	// TODO: 
+	public bool IsConnected { get; set; }
+
 	public RemoteClient(MessageSerializer serializer, MessageProcessor messageProcessor, PortFinder portFinder)
 	{
 		_serializer = serializer;

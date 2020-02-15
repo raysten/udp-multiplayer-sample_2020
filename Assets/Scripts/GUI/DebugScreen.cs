@@ -20,6 +20,7 @@ public class DebugScreen : MonoBehaviour
 	{
 		textBox.text = $"Tick: {_loop.GetTickIndex().ToString()}" +
 			$", offset: {_loop.clientToServerOffset}" +
-			$", dt: {Time.fixedDeltaTime}";
+			$", dt: {Time.fixedDeltaTime}" +
+			$", rtt: {_loop.RTT}";
 	}
 }

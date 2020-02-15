@@ -9,8 +9,8 @@ public class MessageProcessor : IInitializable, IUpdatable
 	private GameLoop _loop;
 
     private Dictionary<Type, List<IMessageHandler>> _handlers = new Dictionary<Type, List<IMessageHandler>>();
-	private Dictionary<uint, Queue<IUdpMessage>> _messages = new Dictionary<uint, Queue<IUdpMessage>>();
-	private Stack<IUdpMessage> _tickIgnoringMessages = new Stack<IUdpMessage>();
+	private Queue<IUdpMessage> _messages = new Queue<IUdpMessage>();
+	private Queue<IUdpMessage> _messagesSafe = new Queue<IUdpMessage>();
 
 	public MessageProcessor(GameLoop loop)
 	{
@@ -24,74 +24,27 @@ public class MessageProcessor : IInitializable, IUpdatable
 
 	public void Simulate(uint tickIndex)
     {
-		while (_tickIgnoringMessages.Count > 0)
-		{
-			var message = _tickIgnoringMessages.Pop();
-			List<IMessageHandler> handlers1 = null;
+		_messagesSafe.Clear();
+		_messagesSafe = new Queue<IUdpMessage>(_messages); // TODO:
+		_messages.Clear();
 
-			if (_handlers.TryGetValue(message.GetType(), out handlers1))
+		while (_messagesSafe.Count > 0)
+		{
+			IUdpMessage message = _messagesSafe.Dequeue();
+
+			if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
 			{
-				foreach (var r in handlers1)
+				foreach (var r in handlers)
 				{
 					r.Handle(message);
 				}
 			}
 		}
-
-		//if (_messages.TryGetValue(tickIndex, out Queue<IUdpMessage> buffer))
-		//{
-		//	for (int i = 0; i < buffer.Count; i++)
-		//	{
-		//		IUdpMessage message = buffer[i];
-
-		//		if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
-		//		{
-		//			foreach (var r in handlers)
-		//			{
-		//				r.Handle(message);
-		//			}
-		//		}
-		//	}
-		//}
-
-		if (_messages.TryGetValue(tickIndex, out Queue<IUdpMessage> buffer))
-		{
-			while (buffer.Count > 0)
-			{
-				IUdpMessage message = buffer.Dequeue();
-
-				if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
-				{
-					foreach (var r in handlers)
-					{
-						r.Handle(message);
-					}
-				}
-			}
-			_messages.Remove(tickIndex);
-		}
 	}
 
     public void AddMessage(IUdpMessage message)
     {
-		// TODO:
-		if (message.GetType() != typeof(PlayerInputMessage) && message.GetType() != typeof(ServerTickMessage))
-		{
-			_tickIgnoringMessages.Push(message);
-		}
-		else
-		{
-			if (_messages.TryGetValue(message.TickIndex, out Queue<IUdpMessage> buffer))
-			{
-				// TODO: Allow only one PlayerInputMessage per client during one tick.
-				buffer.Enqueue(message);
-			}
-			else
-			{
-				_messages.Add(message.TickIndex, new Queue<IUdpMessage>());
-				_messages[message.TickIndex].Enqueue(message);
-			}
-		}
+		_messages.Enqueue(message);
     }
 
     public void Register(Type type, IMessageHandler handler)

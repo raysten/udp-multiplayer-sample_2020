@@ -12,10 +12,11 @@ public class GameLoop : MonoBehaviour
 	private List<IUpdatable> _subscribers = new List<IUpdatable>();
 	private WaitForSeconds _waitTickDelta = null;
 	private float _baseTimeStep;
-	private float _deltaTimeEpsilon = 0.002f;
+	private float _deltaTimeEpsilon = 0.0001f;
 
 	// TODO: temp
 	public int clientToServerOffset;
+	public int RTT;
 
 	[Inject]
 	public void Construct(Settings settings)
@@ -69,14 +70,31 @@ public class GameLoop : MonoBehaviour
 		int rtt = (int)_tickIndex - (int)clientSentTick;
 		int diff = tickOffset - rtt / 2;
 		clientToServerOffset = tickOffset;
+		RTT = rtt;
 
-		if (diff > 2)
+		if (diff > 32)
 		{
-			Time.fixedDeltaTime = _baseTimeStep + _deltaTimeEpsilon;
+			Time.fixedDeltaTime = _baseTimeStep + 5f * _deltaTimeEpsilon;
 		}
-		else if (diff < -2)
+		else if (diff > 15)
 		{
-			Time.fixedDeltaTime = _baseTimeStep - _deltaTimeEpsilon;
+			Time.fixedDeltaTime = _baseTimeStep + 2f * _deltaTimeEpsilon;
+		}
+		else if (diff > 4)
+		{
+			Time.fixedDeltaTime = _baseTimeStep + 1f * _deltaTimeEpsilon;
+		}
+		else if (diff >= 0 && diff <= 4)
+		{
+			Time.fixedDeltaTime = _baseTimeStep;
+		}
+		else if (diff > -7 && diff < 0)
+		{
+			Time.fixedDeltaTime = _baseTimeStep - 1f * _deltaTimeEpsilon;
+		}
+		else if (diff > -15)
+		{
+			Time.fixedDeltaTime = _baseTimeStep - 2f * _deltaTimeEpsilon;
 		}
 	}
 
