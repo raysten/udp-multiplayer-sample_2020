@@ -14,6 +14,8 @@ public class Player : MonoBehaviour, IUpdatable
 	private GameLoop _loop;
 	private Queue<InputData> _inputBuffer = new Queue<InputData>();
 	private Vector3 _input;
+	// TODO: TEMP
+	private float _lastTickTime;
 
 	public string UserName { get; set; }
 
@@ -42,11 +44,13 @@ public class Player : MonoBehaviour, IUpdatable
 
 		if (_input != Vector3.zero)
 		{
-			Debug.Log($"Moving player on tick {tickIndex}");
+			//Debug.Log($"Moving player on tick {tickIndex}");//
 		}
 
 		Move(_input);
 		_input = Vector3.zero;
+		//Debug.Log($"Delta time: {Time.fixedTime - _lastTickTime}");
+		_lastTickTime = Time.fixedTime;
 	}
 
 	public void BufferInput(InputData inputData)
@@ -59,7 +63,10 @@ public class Player : MonoBehaviour, IUpdatable
 
 	private void Move(Vector3 motion)
 	{
-		controller.Move(motion.normalized * Time.fixedDeltaTime * _speed);
+		float dt = Time.fixedDeltaTime;
+		Vector3 movement = motion.normalized * dt * _speed;
+		//Debug.Log($"Delta time fixed: {dt}, movement: {movement.magnitude}");
+		controller.Move(movement);
 	}
 
 	public class Factory : PlaceholderFactory<float, Player>

@@ -25,7 +25,7 @@ public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 		Player player = _playerRegistry.GetPlayerByUserName(message.Sender.ToString());
 		//player.Input = message.GetMovement();
 		player.BufferInput(new InputData(message.GetMovement(), message.TickIndex));
-		Debug.Log($"Client tick: {message.TickIndex}, server tick: {_loop.GetTickIndex()}");
+		//Debug.Log($"Client tick: {message.TickIndex}, server tick: {_loop.GetTickIndex()}");
 		_server.SendServerTickMessage((int)message.TickIndex - (int)_loop.GetTickIndex(), message.TickIndex);
 
 	}
