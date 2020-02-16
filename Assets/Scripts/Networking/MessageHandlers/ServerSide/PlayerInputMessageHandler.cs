@@ -7,17 +7,20 @@ public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 	private PlayerRegistry _playerRegistry;
 	private Server _server;
 	private GameLoop _loop;
+	private DebugScreen _debugScreen;
 
 	public PlayerInputMessageHandler(
 		MessageProcessor messageProcessor,
 		PlayerRegistry playerRegistry,
 		Server server,
-		GameLoop loop
+		GameLoop loop,
+		DebugScreen debugScreen
 	) : base(messageProcessor)
 	{
 		_playerRegistry = playerRegistry;
 		_server = server;
 		_loop = loop;
+		_debugScreen = debugScreen;
 	}
 
 	public override void Handle(PlayerInputMessage message)
@@ -26,6 +29,9 @@ public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 		//player.Input = message.GetMovement();
 		player.BufferInput(new InputData(message.GetMovement(), message.TickIndex));
 		//Debug.Log($"Client tick: {message.TickIndex}, server tick: {_loop.GetTickIndex()}");
+		_debugScreen.PrintExtraDebug(
+			$"Client tick: {message.TickIndex}, server tick: {_loop.GetTickIndex()}"
+		);
 		_server.SendServerTickMessage((int)message.TickIndex - (int)_loop.GetTickIndex(), message.TickIndex);
 
 	}

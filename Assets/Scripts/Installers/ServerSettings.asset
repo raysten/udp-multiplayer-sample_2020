@@ -15,5 +15,7 @@ MonoBehaviour:
   serverConfiguration:
     port: 54120
     timeout: 5000
+  gameLoop:
+    simulationRate: 0.033333335
   player:
     speed: 4

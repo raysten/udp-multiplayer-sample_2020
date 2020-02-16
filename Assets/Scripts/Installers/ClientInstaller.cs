@@ -13,6 +13,8 @@ public class ClientInstaller : MonoInstaller
 	private GameObject playerPrefab;
 	[SerializeField]
 	private GameLoop gameLoop;
+	[SerializeField]
+	private DebugScreen debugScreen;
 
 	public override void InstallBindings()
 	{
@@ -24,6 +26,7 @@ public class ClientInstaller : MonoInstaller
 		InstallSpawner();
 		InstallPlayer();
 		InstallHelpers();
+		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
 	}
 
 	private void InstallGameLoop()

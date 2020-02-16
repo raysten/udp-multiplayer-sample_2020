@@ -10,15 +10,25 @@ public class Server : IInitializable
     private MessageProcessor _messageProcessor;
     private MessageSerializer _serializer;
     private Settings _settings;
+	private GameLoop _loop;
+	private DebugScreen _debugScreen;
 
     private Dictionary<string, ConnectedClient> _connectedClients = new Dictionary<string, ConnectedClient>();
 
-    public Server(MessageProcessor messageHandler, MessageSerializer serializer, Settings settings)
+    public Server(
+		MessageProcessor messageHandler,
+		MessageSerializer serializer,
+		Settings settings,
+		GameLoop loop,
+		DebugScreen debugScreen
+	)
     {
         _messageProcessor = messageHandler;
         _serializer = serializer;
         _settings = settings;
-    }
+		_loop = loop;
+		_debugScreen = debugScreen;
+	}
 
     public void Initialize()
     {
@@ -62,6 +72,10 @@ public class Server : IInitializable
 
         if (message != null)
         {
+			//Debug.Log($"Message send with tick: {message.TickIndex}, received on tick: {_loop.GetTickIndex()}");
+			//_debugScreen.PrintExtraDebug(
+			//	$"Message send with tick: {message.TickIndex}, received on tick: {_loop.GetTickIndex()}"
+			//);
             _messageProcessor.AddMessage(message);
         }
 

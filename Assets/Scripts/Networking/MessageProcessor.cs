@@ -45,7 +45,15 @@ public class MessageProcessor : IInitializable, IUpdatable
     public void AddMessage(IUdpMessage message)
     {
 		_messages.Enqueue(message);
-    }
+
+		//if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
+		//{
+		//	foreach (var r in handlers)
+		//	{
+		//		r.Handle(message);
+		//	}
+		//}
+	}
 
     public void Register(Type type, IMessageHandler handler)
     {

@@ -9,6 +9,8 @@ public class ServerInstaller : MonoInstaller
     private GameObject playerPrefab;
 	[SerializeField]
 	private GameLoop gameLoop;
+	[SerializeField]
+	private DebugScreen debugScreen;
 
     public override void InstallBindings()
     {
@@ -18,6 +20,7 @@ public class ServerInstaller : MonoInstaller
         InstallMessageHandlers();
         InstallSpawner();
         InstallPlayer();
+		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
     }
 
 	private void InstallGameLoop()

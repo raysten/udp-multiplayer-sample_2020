@@ -7,6 +7,7 @@ using Zenject;
 public class GameLoop : MonoBehaviour
 {
 	private Settings _settings;
+	private DebugScreen _debugScreen;
 
 	private uint _tickIndex;
 	private List<IUpdatable> _subscribers = new List<IUpdatable>();
@@ -19,9 +20,10 @@ public class GameLoop : MonoBehaviour
 	public int RTT;
 
 	[Inject]
-	public void Construct(Settings settings)
+	public void Construct(Settings settings, DebugScreen debugScreen)
 	{
 		_settings = settings;
+		_debugScreen = debugScreen;
 	}
 
 	private void Start()
@@ -71,6 +73,8 @@ public class GameLoop : MonoBehaviour
 		int diff = tickOffset - rtt / 2;
 		clientToServerOffset = tickOffset;
 		RTT = rtt;
+		//Debug.Log($"tickoffset: {tickOffset}, clientSentTick: {clientSentTick}, tick index: {_tickIndex}");
+		_debugScreen.PrintExtraDebug($"RTT: {rtt}, tick: {_tickIndex}");
 
 		if (diff > 32)
 		{
@@ -95,6 +99,10 @@ public class GameLoop : MonoBehaviour
 		else if (diff > -15)
 		{
 			Time.fixedDeltaTime = _baseTimeStep - 2f * _deltaTimeEpsilon;
+		}
+		else if (diff <= -15)
+		{
+			Time.fixedDeltaTime = _baseTimeStep - 5f * _deltaTimeEpsilon;
 		}
 	}
 

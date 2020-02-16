@@ -8,12 +8,19 @@ public class DebugScreen : MonoBehaviour
 {
 	[SerializeField]
 	private Text textBox;
+	[SerializeField]
+	private Text extraBox;
 	private GameLoop _loop;
 
     [Inject]
 	public void Construct(GameLoop loop)
 	{
 		_loop = loop;
+	}
+
+	public void PrintExtraDebug(string text)
+	{
+		extraBox.text += text + "\n";
 	}
 
 	private void Update()
