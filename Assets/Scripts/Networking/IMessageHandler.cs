@@ -1,4 +1,4 @@
-﻿public interface IMessageHandler
+public interface IMessageHandler
 {
     void Handle(IUdpMessage message);
 }

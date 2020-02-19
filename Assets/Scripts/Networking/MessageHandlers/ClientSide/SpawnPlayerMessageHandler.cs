@@ -1,17 +1,29 @@
-﻿public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
+public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 {
     private PlayerSpawner _spawner;
+	private GameLoop _loop;
+	private RemoteClient _client;
+	private PlayerRegistry _playerRegistry;
 
     public SpawnPlayerMessageHandler(
         MessageProcessor messageProcessor,
-        PlayerSpawner spawner
+        PlayerSpawner spawner,
+		GameLoop loop,
+		RemoteClient client,
+		PlayerRegistry playerRegistry
     ) : base(messageProcessor)
     {
         _spawner = spawner;
-    }
+		_loop = loop;
+		_client = client;
+		_playerRegistry = playerRegistry;
+	}
 
-    public override void Handle(IUdpMessage message)
+    public override void Handle(SpawnPlayerMessage message)
     {
-        _spawner.SpawnPlayer();
+		// Client snaps to server's tick + some offset which will be adjusted later by clock sync.
+		_loop.TickIndex = message.TickIndex + 5;
+        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName));
+		_client.IsConnected = true;
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -7,15 +7,26 @@ public class ServerInstaller : MonoInstaller
 {
     [SerializeField]
     private GameObject playerPrefab;
+	[SerializeField]
+	private GameLoop gameLoop;
+	[SerializeField]
+	private DebugScreen debugScreen;
 
     public override void InstallBindings()
     {
+		InstallGameLoop();
         InstallServer();
         InstallMessageScripts();
         InstallMessageHandlers();
         InstallSpawner();
         InstallPlayer();
+		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
     }
+
+	private void InstallGameLoop()
+	{
+		Container.BindInterfacesAndSelfTo<GameLoop>().FromInstance(gameLoop).AsSingle();
+	}
 
     private void InstallServer()
     {
@@ -31,7 +42,9 @@ public class ServerInstaller : MonoInstaller
 
     private void InstallMessageHandlers()
     {
-        Container.BindInterfacesAndSelfTo<WelcomeMessageHandler>().AsSingle();
+        Container.BindInterfacesAndSelfTo<HandshakeMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<PlayerInputMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ClockSyncMessageHandler>().AsSingle();
     }
 
     private void InstallSpawner()
@@ -41,6 +54,7 @@ public class ServerInstaller : MonoInstaller
 
     private void InstallPlayer()
     {
-        Container.BindFactory<Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+        Container.BindFactory<float, Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
     }
 }

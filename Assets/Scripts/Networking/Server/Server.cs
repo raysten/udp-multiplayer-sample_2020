@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
@@ -7,18 +7,25 @@ using Zenject;
 public class Server : IInitializable
 {
     private UdpConnection _connection;
-    private MessageProcessor _messageHandler;
+    private MessageProcessor _messageProcessor;
     private MessageSerializer _serializer;
     private Settings _settings;
+	private GameLoop _loop;
 
     private Dictionary<string, ConnectedClient> _connectedClients = new Dictionary<string, ConnectedClient>();
 
-    public Server(MessageProcessor messageHandler, MessageSerializer serializer, Settings settings)
+    public Server(
+		MessageProcessor messageHandler,
+		MessageSerializer serializer,
+		Settings settings,
+		GameLoop loop
+	)
     {
-        _messageHandler = messageHandler;
+        _messageProcessor = messageHandler;
         _serializer = serializer;
         _settings = settings;
-    }
+		_loop = loop;
+	}
 
     public void Initialize()
     {
@@ -39,6 +46,18 @@ public class Server : IInitializable
         return _connectedClients.ContainsKey(clientId);
     }
 
+	public void SendMessage(IUdpMessage message, ConnectedClient client)
+	{
+		var bytes = _serializer.SerializeMessage(message);
+		_connection.Send(client.Remote, bytes);
+	}
+
+	public void SendMessage(IUdpMessage message, IPEndPoint remote)
+	{
+		var bytes = _serializer.SerializeMessage(message);
+		_connection.Send(remote, bytes);
+	}
+
     public void SendToAll(IUdpMessage message)
     {
         var bytes = _serializer.SerializeMessage(message);
@@ -55,7 +74,7 @@ public class Server : IInitializable
 
         if (message != null)
         {
-            _messageHandler.PushMessage(message);
+            _messageProcessor.AddMessage(message);
         }
 
         _connection.Listen(OnMessageReceived, _settings.timeout);

@@ -15,3 +15,68 @@ MonoBehaviour:
   serverConfiguration:
     port: 54120
     timeout: 5000
+  gameLoop:
+    simulationRate: 0.033333335
+  player:
+    speed: 4
+  clockAdjustmentCurve:
+    clientClockAdjustmentCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -15
+        value: -0.04024414
+        inSlope: 0.00023824215
+        outSlope: 0.00023824215
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.17391306
+      - serializedVersion: 3
+        time: -4.231884
+        value: -0.022499999
+        inSlope: 0.0040205293
+        outSlope: 0.0040205293
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.06864065
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.00010636168
+        outSlope: 0.00010636168
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.14782609
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 2
+        value: 0
+        inSlope: 0.000115413735
+        outSlope: 0.000115413735
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 1
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 10.036015
+        value: 0.007
+        inSlope: 0.0028074111
+        outSlope: 0.0028074111
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.19023964
+        outWeight: 0.28178334
+      - serializedVersion: 3
+        time: 15
+        value: 0.04
+        inSlope: 0.008841435
+        outSlope: 0.008841435
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.08026754
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 
 public class DataReader
@@ -23,6 +23,16 @@ public class DataReader
     {
         return _reader.ReadInt32();
     }
+
+	public uint GetUnsignedInteger()
+	{
+		return _reader.ReadUInt32();
+	}
+
+	public bool GetBool()
+	{
+		return _reader.ReadBoolean();
+	}
 
     public void Close()
     {

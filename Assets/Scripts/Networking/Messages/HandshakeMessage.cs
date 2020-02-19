@@ -1,9 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 
-public class WelcomeMessage : BaseUdpMessage
+public class HandshakeMessage : BaseUdpMessage
 {
     
 }

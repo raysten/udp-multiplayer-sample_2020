@@ -11,9 +11,14 @@ public class ClientInstaller : MonoInstaller
 	private Button _connectButton;
 	[SerializeField]
 	private GameObject playerPrefab;
+	[SerializeField]
+	private GameLoop gameLoop;
+	[SerializeField]
+	private DebugScreen debugScreen;
 
 	public override void InstallBindings()
 	{
+		InstallGameLoop();
 		InstallClient();
 		InstallMessageScripts();
 		InstallConnectionGUI();
@@ -21,11 +26,18 @@ public class ClientInstaller : MonoInstaller
 		InstallSpawner();
 		InstallPlayer();
 		InstallHelpers();
+		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
+	}
+
+	private void InstallGameLoop()
+	{
+		Container.BindInterfacesAndSelfTo<GameLoop>().FromInstance(gameLoop).AsSingle();
 	}
 
 	private void InstallClient()
 	{
 		Container.BindInterfacesAndSelfTo<RemoteClient>().AsSingle();
+		Container.BindInterfacesAndSelfTo<PlayerClockSyncSystem>().AsSingle();
 	}
 
 	private void InstallMessageScripts()
@@ -45,6 +57,7 @@ public class ClientInstaller : MonoInstaller
 	private void InstallMessageHandlers()
 	{
 		Container.BindInterfacesAndSelfTo<SpawnPlayerMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ServerClockMessageHandler>().AsSingle();
 	}
 
 	private void InstallSpawner()
@@ -54,7 +67,9 @@ public class ClientInstaller : MonoInstaller
 
 	private void InstallPlayer()
 	{
-		Container.BindFactory<Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+		Container.BindFactory<float, Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+		Container.BindInterfacesAndSelfTo<PlayerInputSystem>().AsSingle();
+		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
 	}
 
 	private void InstallHelpers()

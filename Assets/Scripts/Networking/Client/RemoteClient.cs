@@ -7,12 +7,23 @@ public class RemoteClient : IInitializable
 	private MessageSerializer _serializer;
 	private MessageProcessor _messageProcessor;
 	private PortFinder _portFinder;
+	private Server.Settings _settings;
 
-	public RemoteClient(MessageSerializer serializer, MessageProcessor messageProcessor, PortFinder portFinder)
+	private IPEndPoint _serverEndpoint;
+
+	public bool IsConnected { get; set; }
+
+	public RemoteClient(
+		MessageSerializer serializer,
+		MessageProcessor messageProcessor,
+		PortFinder portFinder,
+		Server.Settings settings
+	)
 	{
 		_serializer = serializer;
 		_messageProcessor = messageProcessor;
 		_portFinder = portFinder;
+		_settings = settings;
 	}
 
 	public void Initialize()
@@ -20,24 +31,35 @@ public class RemoteClient : IInitializable
 		_connection = new UdpConnection(_portFinder.GetAvailablePort(54000));
 	}
 
-	public void SendWelcomeMessage(IPAddress ip, int port)
+	public void SetServerEndpoint(IPAddress ip, int port)
 	{
-		var welcome = new WelcomeMessage();
-		var bytes = _serializer.SerializeMessage(welcome);
-		_connection.Send(new IPEndPoint(ip, port), bytes);
-		_connection.Listen(OnMessageReceived);
+		_serverEndpoint = new IPEndPoint(ip, port);
 	}
 
-	// TODO: timeout like in server
+	public void SendMessage(IUdpMessage message)
+	{
+		var bytes = _serializer.SerializeMessage(message);
+		_connection.Send(_serverEndpoint, bytes);
+	}
+
+	public void SendHandshakeMessage(IPAddress ip, int port)
+	{
+		SetServerEndpoint(ip, port);
+		var message = new HandshakeMessage();
+		var bytes = _serializer.SerializeMessage(message);
+		_connection.Send(_serverEndpoint, bytes);
+		_connection.Listen(OnMessageReceived, _settings.timeout);
+	}
+
 	private void OnMessageReceived(IPEndPoint endpoint, byte[] bytes)
 	{
 		var message = _serializer.ParseMessage(endpoint, bytes);
 
 		if (message != null)
 		{
-			_messageProcessor.PushMessage(message);
+			_messageProcessor.AddMessage(message);
 		}
 
-		_connection.Listen(OnMessageReceived);
+		_connection.Listen(OnMessageReceived, _settings.timeout);
 	}
 }

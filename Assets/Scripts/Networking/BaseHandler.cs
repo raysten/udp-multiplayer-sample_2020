@@ -1,6 +1,6 @@
-﻿using Zenject;
+using Zenject;
 
-public abstract class BaseHandler<T> : IMessageHandler, IInitializable where T : IUdpMessage
+public abstract class BaseHandler<T> : IMessageHandler<T>, IInitializable where T : class, IUdpMessage
 {
     private MessageProcessor _messageProcessor;
 
@@ -14,5 +14,10 @@ public abstract class BaseHandler<T> : IMessageHandler, IInitializable where T :
         _messageProcessor.Register(typeof(T), this);
     }
 
-    public abstract void Handle(IUdpMessage message);
+	public abstract void Handle(T message);
+
+	public void Handle(IUdpMessage message)
+	{
+		Handle(message as T);
+	}
 }

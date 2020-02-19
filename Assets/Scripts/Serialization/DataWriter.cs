@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 
 public class DataWriter
@@ -16,6 +16,16 @@ public class DataWriter
     {
         _writer.Write(value);
     }
+
+	public void Write(uint value)
+	{
+		_writer.Write(value);
+	}
+
+	public void Write(bool value)
+	{
+		_writer.Write(value);
+	}
 
     public void Write(string value, bool writeLength = true)
     {

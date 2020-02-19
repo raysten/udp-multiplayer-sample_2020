@@ -1,36 +1,51 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class MessageProcessor : IFixedTickable
+public class MessageProcessor : IInitializable, IUpdatable
 {
+	private GameLoop _loop;
+
     private Dictionary<Type, List<IMessageHandler>> _handlers = new Dictionary<Type, List<IMessageHandler>>();
+	private List<IUdpMessage> _messages = new List<IUdpMessage>();
+	private List<IUdpMessage> _messagesCopy = new List<IUdpMessage>();
 
-    private Stack<IUdpMessage> _messages = new Stack<IUdpMessage>();
+	public MessageProcessor(GameLoop loop)
+	{
+		_loop = loop;
+	}
 
-    public void FixedTick()
+	public void Initialize()
+	{
+		_loop.Subscribe(this);
+	}
+
+	public void Simulate(uint tickIndex)
     {
-        while (_messages.Count > 0)
-        {
-            var message = _messages.Pop();
-            List<IMessageHandler> handlers = null;
+		_messagesCopy.Clear();
+		_messagesCopy.AddRange(_messages);
+		_messages.Clear();
 
-            if (_handlers.TryGetValue(message.GetType(), out handlers))
-            {
-                foreach (var r in handlers)
-                {
-                    r.Handle(message);
-                }
-            }
-        }
-    }
+		for (int i = 0; i < _messagesCopy.Count; i++)
+		{
+			IUdpMessage message = _messagesCopy[i];
 
-    public void PushMessage(IUdpMessage message)
+			if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
+			{
+				foreach (var r in handlers)
+				{
+					r.Handle(message);
+				}
+			}
+		}
+	}
+
+    public void AddMessage(IUdpMessage message)
     {
-        _messages.Push(message);
-    }
+		_messages.Add(message);
+	}
 
     public void Register(Type type, IMessageHandler handler)
     {
