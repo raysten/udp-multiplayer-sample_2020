@@ -20,6 +20,5 @@ public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 	{
 		Player player = _playerRegistry.GetPlayerByUserName(message.Sender.ToString());
 		player.BufferInput(new InputData(message.GetMovement(), message.TickIndex));
-
 	}
 }

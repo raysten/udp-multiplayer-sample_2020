@@ -31,6 +31,7 @@ public class ServerInstaller : MonoInstaller
     private void InstallServer()
     {
         Container.BindInterfacesAndSelfTo<Server>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ServerSnapshotSystem>().AsSingle();
     }
 
     private void InstallMessageScripts()

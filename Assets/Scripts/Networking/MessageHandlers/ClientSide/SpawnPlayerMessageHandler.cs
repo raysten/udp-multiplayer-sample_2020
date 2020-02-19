@@ -26,8 +26,19 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
     {
 		// Client snaps to server's tick + some offset which will be adjusted later by clock sync.
 		_loop.TickIndex = message.TickIndex + 5;
-		_client.LocalPlayerId = message.playerId;
-		_client.IsConnected = true;
-        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName), message.playerId);
+
+		if (_client.LocalPlayerId == -1)
+		{
+			_client.LocalPlayerId = message.playerId;
+			_client.IsConnected = true;
+		}
+
+        Player player = _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName), message.playerId);
+
+		// TODO: refactor the hack
+		if (player.PlayerId != _client.LocalPlayerId)
+		{
+			player.DisableMovementInUpdate = true;
+		}
     }
 }

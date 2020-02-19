@@ -6,16 +6,20 @@ public class PlayerRegistry
 {
 	private List<Player> _players = new List<Player>();
 
+	public List<Player> Players { get => _players; }
+
 	public void RegisterPlayer(Player player)
 	{
 		_players.Add(player);
 		player.PlayerId = _players.Count;
 	}
 
-	public void RegisterPlayer(Player player, int id)
+	public Player RegisterPlayer(Player player, int id)
 	{
 		_players.Add(player);
 		player.PlayerId = id;
+
+		return player;
 	}
 
 	public Player GetPlayerByUserName(string userName)

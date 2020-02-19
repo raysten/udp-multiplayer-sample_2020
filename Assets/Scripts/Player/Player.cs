@@ -17,6 +17,8 @@ public class Player : MonoBehaviour, IUpdatable
 
 	public string UserName { get; set; }
 	public int PlayerId { get; set; }
+	// TODO: temp
+	public bool DisableMovementInUpdate { get; set; }
 
 	public void Start()
 	{
@@ -25,6 +27,11 @@ public class Player : MonoBehaviour, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
+		if (DisableMovementInUpdate)
+		{
+			return;
+		}
+
 		if (_inputBuffer.Count > 0)
 		{
 			var firstInputInBuffer = _inputBuffer.Peek();
