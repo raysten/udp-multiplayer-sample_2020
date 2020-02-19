@@ -16,6 +16,7 @@ public class Player : MonoBehaviour, IUpdatable
 	private Vector3 _input;
 
 	public string UserName { get; set; }
+	public int PlayerId { get; set; }
 
 	public void Start()
 	{

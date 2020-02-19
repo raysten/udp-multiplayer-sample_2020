@@ -44,7 +44,7 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 
 				if (_localPlayer == null)
 				{
-					_localPlayer = _playerRegistry.GetPlayerByUserName(_client.LocalPlayerName);
+					_localPlayer = _playerRegistry.GetPlayerById(_client.LocalPlayerId);
 				}
 
 				_localPlayer.BufferInput(new InputData(input, tickIndex + 1));

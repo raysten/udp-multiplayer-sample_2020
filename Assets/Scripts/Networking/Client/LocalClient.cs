@@ -12,7 +12,7 @@ public class LocalClient : IInitializable
 	private IPEndPoint _serverEndpoint;
 
 	public bool IsConnected { get; set; }
-	public string LocalPlayerName { get; set; }
+	public int LocalPlayerId { get; set; }
 
 	public LocalClient(
 		MessageSerializer serializer,

@@ -1,4 +1,5 @@
 using System.Net;
+using UnityEngine;
 
 public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 {
@@ -25,8 +26,8 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
     {
 		// Client snaps to server's tick + some offset which will be adjusted later by clock sync.
 		_loop.TickIndex = message.TickIndex + 5;
-		_client.LocalPlayerName = message.playerName;
+		_client.LocalPlayerId = message.playerId;
 		_client.IsConnected = true;
-        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName));
+        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName), message.playerId);
     }
 }
