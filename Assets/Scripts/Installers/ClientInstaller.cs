@@ -37,6 +37,7 @@ public class ClientInstaller : MonoInstaller
 	private void InstallClient()
 	{
 		Container.BindInterfacesAndSelfTo<RemoteClient>().AsSingle();
+		Container.BindInterfacesAndSelfTo<PlayerClockSyncSystem>().AsSingle();
 	}
 
 	private void InstallMessageScripts()
@@ -56,7 +57,7 @@ public class ClientInstaller : MonoInstaller
 	private void InstallMessageHandlers()
 	{
 		Container.BindInterfacesAndSelfTo<SpawnPlayerMessageHandler>().AsSingle();
-		Container.BindInterfacesAndSelfTo<ServerTickMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ServerClockMessageHandler>().AsSingle();
 	}
 
 	private void InstallSpawner()
@@ -68,6 +69,7 @@ public class ClientInstaller : MonoInstaller
 	{
 		Container.BindFactory<float, Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerInputSystem>().AsSingle();
+		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
 	}
 
 	private void InstallHelpers()

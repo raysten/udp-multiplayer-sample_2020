@@ -42,8 +42,9 @@ public class ServerInstaller : MonoInstaller
 
     private void InstallMessageHandlers()
     {
-        Container.BindInterfacesAndSelfTo<WelcomeMessageHandler>().AsSingle();
+        Container.BindInterfacesAndSelfTo<HandshakeMessageHandler>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerInputMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ClockSyncMessageHandler>().AsSingle();
     }
 
     private void InstallSpawner()

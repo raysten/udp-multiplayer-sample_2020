@@ -21,7 +21,6 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
-		// TODO:
 		if (_client.IsConnected)
 		{
 			bool up = Input.GetKey(KeyCode.W);
@@ -29,12 +28,11 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 			bool down = Input.GetKey(KeyCode.S);
 			bool left = Input.GetKey(KeyCode.A);
 
-			//if (up || right || down || left)
-			//{
-			//	_client.SendInputMessage(up, right, down, left);
-			//}
-
-			_client.SendInputMessage(up, right, down, left);
+			if (up || right || down || left)
+			{
+				var inputMessage = new PlayerInputMessage(up, right, down, left);
+				_client.SendMessage(inputMessage);
+			}
 		}
 	}
 }

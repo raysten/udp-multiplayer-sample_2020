@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 
-public class ServerTickMessage : BaseUdpMessage
+public class ServerClockMessage : BaseUdpMessage
 {
 	public int tickOffset;
 	public uint clientSentTick;
 
-	public ServerTickMessage()
+	public ServerClockMessage()
 	{
 	}
 
-	public ServerTickMessage(int tickOffset, uint clientSentTick)
+	public ServerClockMessage(int tickOffset, uint clientSentTick)
 	{
-		// TODO:
 		this.tickOffset = tickOffset;
 		this.clientSentTick = clientSentTick;
 	}

@@ -14,8 +14,6 @@ public class Player : MonoBehaviour, IUpdatable
 	private GameLoop _loop;
 	private Queue<InputData> _inputBuffer = new Queue<InputData>();
 	private Vector3 _input;
-	// TODO: TEMP
-	private float _lastTickTime;
 
 	public string UserName { get; set; }
 
@@ -26,7 +24,6 @@ public class Player : MonoBehaviour, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
-		// TODO: can it be cleaner?
 		if (_inputBuffer.Count > 0)
 		{
 			var firstInputInBuffer = _inputBuffer.Peek();
@@ -42,20 +39,13 @@ public class Player : MonoBehaviour, IUpdatable
 			}
 		}
 
-		if (_input != Vector3.zero)
-		{
-			//Debug.Log($"Moving player on tick {tickIndex}");//
-		}
-
 		Move(_input);
 		_input = Vector3.zero;
-		//Debug.Log($"Delta time: {Time.fixedTime - _lastTickTime}");
-		_lastTickTime = Time.fixedTime;
 	}
 
 	public void BufferInput(InputData inputData)
 	{
-		if (inputData.tickIndex >= _loop.GetTickIndex())
+		if (inputData.tickIndex >= _loop.TickIndex)
 		{
 			_inputBuffer.Enqueue(inputData);
 		}
@@ -65,7 +55,6 @@ public class Player : MonoBehaviour, IUpdatable
 	{
 		float dt = Time.fixedDeltaTime;
 		Vector3 movement = motion.normalized * dt * _speed;
-		//Debug.Log($"Delta time fixed: {dt}, movement: {movement.magnitude}");
 		controller.Move(movement);
 	}
 

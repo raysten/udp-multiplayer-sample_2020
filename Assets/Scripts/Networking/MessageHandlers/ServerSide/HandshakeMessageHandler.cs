@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class WelcomeMessageHandler : BaseHandler<WelcomeMessage>
+public class HandshakeMessageHandler : BaseHandler<HandshakeMessage>
 {
 	private PlayerSpawner _spawner;
 	private Server _server;
 	private PlayerRegistry _playerRegistry;
 
-	public WelcomeMessageHandler(
+	public HandshakeMessageHandler(
 		MessageProcessor messageProcessor,
 		PlayerSpawner spawner,
 		Server server,
@@ -18,7 +18,7 @@ public class WelcomeMessageHandler : BaseHandler<WelcomeMessage>
 		_playerRegistry = playerRegistry;
 	}
 
-	public override void Handle(WelcomeMessage message)
+	public override void Handle(HandshakeMessage message)
 	{
 		string clientId = message.Sender.ToString();
 
@@ -27,13 +27,12 @@ public class WelcomeMessageHandler : BaseHandler<WelcomeMessage>
 			Player player = _spawner.SpawnPlayer(clientId);
 			_playerRegistry.RegisterPlayer(player);
 			_server.RegisterClient(clientId, message.Sender);
+			var spawnMessage = new SpawnPlayerMessage(clientId);
+			_server.SendToAll(spawnMessage);
 		}
 		else
 		{
 			Debug.LogWarning("Client with this id is already connected.");
 		}
-
-		var spawnMessage = new SpawnPlayerMessage();
-		_server.SendToAll(spawnMessage);
 	}
 }

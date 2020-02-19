@@ -11,11 +11,14 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
 	private GameLoop.Settings gameLoop;
 	[SerializeField]
 	private Player.Settings player;
+	[SerializeField]
+	private ServerClockMessageHandler.Settings clockAdjustmentCurve;
 
     public override void InstallBindings()
     {
         Container.BindInstance(serverConfiguration).AsSingle();
 		Container.BindInstance(gameLoop).AsSingle();
 		Container.BindInstance(player).AsSingle();
+		Container.BindInstance(clockAdjustmentCurve).AsSingle();
     }
 }

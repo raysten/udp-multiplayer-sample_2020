@@ -9,8 +9,8 @@ public class MessageProcessor : IInitializable, IUpdatable
 	private GameLoop _loop;
 
     private Dictionary<Type, List<IMessageHandler>> _handlers = new Dictionary<Type, List<IMessageHandler>>();
-	private Queue<IUdpMessage> _messages = new Queue<IUdpMessage>();
-	private Queue<IUdpMessage> _messagesSafe = new Queue<IUdpMessage>();
+	private List<IUdpMessage> _messages = new List<IUdpMessage>();
+	private List<IUdpMessage> _messagesCopy = new List<IUdpMessage>();
 
 	public MessageProcessor(GameLoop loop)
 	{
@@ -24,13 +24,13 @@ public class MessageProcessor : IInitializable, IUpdatable
 
 	public void Simulate(uint tickIndex)
     {
-		_messagesSafe.Clear();
-		_messagesSafe = new Queue<IUdpMessage>(_messages); // TODO:
+		_messagesCopy.Clear();
+		_messagesCopy.AddRange(_messages);
 		_messages.Clear();
 
-		while (_messagesSafe.Count > 0)
+		for (int i = 0; i < _messagesCopy.Count; i++)
 		{
-			IUdpMessage message = _messagesSafe.Dequeue();
+			IUdpMessage message = _messagesCopy[i];
 
 			if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
 			{
@@ -44,15 +44,7 @@ public class MessageProcessor : IInitializable, IUpdatable
 
     public void AddMessage(IUdpMessage message)
     {
-		_messages.Enqueue(message);
-
-		//if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
-		//{
-		//	foreach (var r in handlers)
-		//	{
-		//		r.Handle(message);
-		//	}
-		//}
+		_messages.Add(message);
 	}
 
     public void Register(Type type, IMessageHandler handler)

@@ -26,7 +26,7 @@ public class ConnectionGUI : IInitializable
 	{
 		string[] split = _inputField.text.Split(':');
 		IPAddress ipAddress = IPAddress.Parse(split[0]);
-		_client.SendWelcomeMessage(ipAddress, int.Parse(split[1]));
+		_client.SendHandshakeMessage(ipAddress, int.Parse(split[1]));
 		HideGUI();
 	}
 

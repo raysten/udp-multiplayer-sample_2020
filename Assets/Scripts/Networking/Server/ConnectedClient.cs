@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-class ConnectedClient
+public class ConnectedClient
 {
     public IPEndPoint Remote { get; }
     public DateTime LastMessage { get; set; }

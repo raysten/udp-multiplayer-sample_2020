@@ -11,7 +11,6 @@ public class Server : IInitializable
     private MessageSerializer _serializer;
     private Settings _settings;
 	private GameLoop _loop;
-	private DebugScreen _debugScreen;
 
     private Dictionary<string, ConnectedClient> _connectedClients = new Dictionary<string, ConnectedClient>();
 
@@ -19,15 +18,13 @@ public class Server : IInitializable
 		MessageProcessor messageHandler,
 		MessageSerializer serializer,
 		Settings settings,
-		GameLoop loop,
-		DebugScreen debugScreen
+		GameLoop loop
 	)
     {
         _messageProcessor = messageHandler;
         _serializer = serializer;
         _settings = settings;
 		_loop = loop;
-		_debugScreen = debugScreen;
 	}
 
     public void Initialize()
@@ -49,6 +46,18 @@ public class Server : IInitializable
         return _connectedClients.ContainsKey(clientId);
     }
 
+	public void SendMessage(IUdpMessage message, ConnectedClient client)
+	{
+		var bytes = _serializer.SerializeMessage(message);
+		_connection.Send(client.Remote, bytes);
+	}
+
+	public void SendMessage(IUdpMessage message, IPEndPoint remote)
+	{
+		var bytes = _serializer.SerializeMessage(message);
+		_connection.Send(remote, bytes);
+	}
+
     public void SendToAll(IUdpMessage message)
     {
         var bytes = _serializer.SerializeMessage(message);
@@ -59,23 +68,12 @@ public class Server : IInitializable
         }
     }
 
-	public void SendServerTickMessage(int tickOffset, uint receivedTick)
-	{
-		var message = new ServerTickMessage(tickOffset, receivedTick);
-		// TODO:
-		SendToAll(message);
-	}
-
     private void OnMessageReceived(IPEndPoint endpoint, byte[] bytes)
     {
         var message = _serializer.ParseMessage(endpoint, bytes);
 
         if (message != null)
         {
-			//Debug.Log($"Message send with tick: {message.TickIndex}, received on tick: {_loop.GetTickIndex()}");
-			//_debugScreen.PrintExtraDebug(
-			//	$"Message send with tick: {message.TickIndex}, received on tick: {_loop.GetTickIndex()}"
-			//);
             _messageProcessor.AddMessage(message);
         }
 

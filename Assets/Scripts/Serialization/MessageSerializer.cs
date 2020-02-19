@@ -45,7 +45,7 @@ public class MessageSerializer
         writer.Write(HEADER_VERIFICATION, false);
         var cmdName = message.GetType().Name;
         writer.Write(cmdName);
-		writer.Write(_loop.GetTickIndex());
+		writer.Write(_loop.TickIndex);
         message.Serialize(writer);
         var bytes = writer.Finalize();
 
