@@ -5,10 +5,10 @@ using Zenject;
 
 public class PlayerClockSyncSystem : IInitializable, IUpdatable
 {
-	private RemoteClient _client;
+	private LocalClient _client;
 	private GameLoop _loop;
 
-	public PlayerClockSyncSystem(RemoteClient client, GameLoop loop)
+	public PlayerClockSyncSystem(LocalClient client, GameLoop loop)
 	{
 		_client = client;
 		_loop = loop;

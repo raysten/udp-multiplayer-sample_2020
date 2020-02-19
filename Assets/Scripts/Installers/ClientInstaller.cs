@@ -36,7 +36,7 @@ public class ClientInstaller : MonoInstaller
 
 	private void InstallClient()
 	{
-		Container.BindInterfacesAndSelfTo<RemoteClient>().AsSingle();
+		Container.BindInterfacesAndSelfTo<LocalClient>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerClockSyncSystem>().AsSingle();
 	}
 

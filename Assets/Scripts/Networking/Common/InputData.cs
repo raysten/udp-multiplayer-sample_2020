@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class InputData
+public struct InputData
 {
 	public Vector3 input;
 	public uint tickIndex;

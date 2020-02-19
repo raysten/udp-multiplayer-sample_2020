@@ -1,15 +1,17 @@
+using System.Net;
+
 public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 {
     private PlayerSpawner _spawner;
 	private GameLoop _loop;
-	private RemoteClient _client;
+	private LocalClient _client;
 	private PlayerRegistry _playerRegistry;
 
     public SpawnPlayerMessageHandler(
         MessageProcessor messageProcessor,
         PlayerSpawner spawner,
 		GameLoop loop,
-		RemoteClient client,
+		LocalClient client,
 		PlayerRegistry playerRegistry
     ) : base(messageProcessor)
     {
@@ -23,7 +25,8 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
     {
 		// Client snaps to server's tick + some offset which will be adjusted later by clock sync.
 		_loop.TickIndex = message.TickIndex + 5;
-        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName));
+		_client.LocalPlayerName = message.playerName;
 		_client.IsConnected = true;
+        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName));
     }
 }

@@ -6,9 +6,9 @@ public class ConnectionGUI : IInitializable
 {
 	private InputField _inputField;
 	private Button _connectionButton;
-	private RemoteClient _client;
+	private LocalClient _client;
 
-	public ConnectionGUI(InputField inputField, Button connectionButton, RemoteClient client)
+	public ConnectionGUI(InputField inputField, Button connectionButton, LocalClient client)
 	{
 		_inputField = inputField;
 		_connectionButton = connectionButton;

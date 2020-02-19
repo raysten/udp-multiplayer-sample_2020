@@ -1,7 +1,7 @@
 using System.Net;
 using Zenject;
 
-public class RemoteClient : IInitializable
+public class LocalClient : IInitializable
 {
 	private UdpConnection _connection;
 	private MessageSerializer _serializer;
@@ -12,8 +12,9 @@ public class RemoteClient : IInitializable
 	private IPEndPoint _serverEndpoint;
 
 	public bool IsConnected { get; set; }
+	public string LocalPlayerName { get; set; }
 
-	public RemoteClient(
+	public LocalClient(
 		MessageSerializer serializer,
 		MessageProcessor messageProcessor,
 		PortFinder portFinder,
