@@ -29,7 +29,11 @@ public class ServerClockMessageHandler : BaseHandler<ServerClockMessage>
 		}
 
 		int diff = message.tickOffset - _rtt.value / 2;
-		Time.fixedDeltaTime = _loop.BaseTimeStep + _settings.clientClockAdjustmentCurve.Evaluate(diff);
+		Time.fixedDeltaTime = Mathf.Clamp(
+			_loop.BaseTimeStep + _settings.clientClockAdjustmentCurve.Evaluate(diff),
+			_settings.minTimeStep,
+			_settings.maxTimeStep
+		);
 
 		// TODO: temp below, for debugging
 		_loop.clientToServerOffset = message.tickOffset;
@@ -40,6 +44,8 @@ public class ServerClockMessageHandler : BaseHandler<ServerClockMessage>
 	public class Settings
 	{
 		public AnimationCurve clientClockAdjustmentCurve;
+		public float minTimeStep = 0.01f;
+		public float maxTimeStep = 0.06f;
 	}
 
 	public class RttHelper
