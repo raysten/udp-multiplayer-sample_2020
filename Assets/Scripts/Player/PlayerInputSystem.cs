@@ -56,7 +56,7 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 					_localPlayer = _playerRegistry.GetControlledPlayerById(_client.LocalPlayerId);
 				}
 
-				_localPlayer.BufferInput(new InputData(input, tickIndex + 1));
+				_localPlayer.BufferInput(new InputData(input, tickIndex));
 			}
 			else
 			{

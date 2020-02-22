@@ -20,7 +20,7 @@ public class ServerSnapshotSystem : IInitializable, IUpdatable
 
 	public void Initialize()
 	{
-		_loop.Subscribe(this);
+		_loop.LateSubscribe(this);
 	}
 
 	public void Simulate(uint tickIndex)
