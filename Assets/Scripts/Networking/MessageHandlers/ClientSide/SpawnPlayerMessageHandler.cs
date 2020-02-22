@@ -32,9 +32,5 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 			_client.IsConnected = true;
 			_playerRegistry.RegisterPlayer(_spawner.SpawnControlledPlayer(), message.playerId);
 		}
-		else
-		{
-			_playerRegistry.RegisterPlayer(_spawner.SpawnRemotePlayer(), message.playerId);
-		}
     }
 }

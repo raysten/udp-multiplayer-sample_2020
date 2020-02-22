@@ -28,7 +28,7 @@ public class HandshakeMessageHandler : BaseHandler<HandshakeMessage>
 			_playerRegistry.RegisterPlayer(player);
 			_server.RegisterClient(clientId, message.Sender);
 			var spawnMessage = new SpawnPlayerMessage(clientId, player.PlayerId);
-			_server.SendToAll(spawnMessage);
+			_server.SendMessage(spawnMessage, message.Sender);
 		}
 		else
 		{

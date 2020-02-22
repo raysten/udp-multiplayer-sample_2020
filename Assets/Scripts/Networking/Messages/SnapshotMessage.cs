@@ -52,10 +52,12 @@ public struct PlayerSnapshotData
 {
 	public int playerId;
 	public Vector3 position;
+	public uint tickIndex;
 
 	public PlayerSnapshotData(int playerId, Vector3 position)
 	{
 		this.playerId = playerId;
 		this.position = position;
+		this.tickIndex = 0;
 	}
 }
