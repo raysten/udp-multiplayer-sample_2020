@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 public class DataReader
 {
@@ -32,6 +33,15 @@ public class DataReader
 	public bool GetBool()
 	{
 		return _reader.ReadBoolean();
+	}
+
+	public Vector3 GetVector3()
+	{
+		float x = _reader.ReadSingle();
+		float y = _reader.ReadSingle();
+		float z = _reader.ReadSingle();
+
+		return new Vector3(x, y, z);
 	}
 
     public void Close()

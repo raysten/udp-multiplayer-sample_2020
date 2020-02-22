@@ -4,20 +4,28 @@ using UnityEngine;
 
 public class PlayerSpawner
 {
-    private Player.Factory _factory;
+    private ControlledPlayer.Factory _controlledPlayerFactory;
+    private RemotePlayer.Factory _remotePlayerFactory;
 	private Player.Settings _settings;
 
-    public PlayerSpawner(Player.Factory factory, Player.Settings settings)
+    public PlayerSpawner(
+		ControlledPlayer.Factory controlledPlayerFactory,
+		RemotePlayer.Factory remotePlayerFactory,
+		Player.Settings settings
+	)
     {
-        _factory = factory;
+        _controlledPlayerFactory = controlledPlayerFactory;
+		_remotePlayerFactory = remotePlayerFactory;
 		_settings = settings;
 	}
 
-    public Player SpawnPlayer(string userName)
+    public ControlledPlayer SpawnControlledPlayer()
     {
-		Player p = _factory.Create(_settings.speed);
-		p.UserName = userName;
-
-		return p;
+		return _controlledPlayerFactory.Create(_settings.speed);
     }
+
+	public RemotePlayer SpawnRemotePlayer()
+	{
+		return _remotePlayerFactory.Create(_settings.speed);
+	}
 }

@@ -10,12 +10,15 @@ public class PlayerInputMessage : BaseUdpMessage
 	private bool _down;
 	private bool _left;
 
+	public int PlayerId { get; private set; }
+
 	public PlayerInputMessage()
 	{
 	}
 
-	public PlayerInputMessage(bool up, bool right, bool down, bool left)
+	public PlayerInputMessage(int playerId, bool up, bool right, bool down, bool left)
 	{
+		PlayerId = playerId;
 		_up = up;
 		_right = right;
 		_down = down;
@@ -26,6 +29,7 @@ public class PlayerInputMessage : BaseUdpMessage
 	{
 		base.Deserialize(remote, reader);
 
+		PlayerId = reader.GetInteger();
 		_up = reader.GetBool();
 		_right = reader.GetBool();
 		_down = reader.GetBool();
@@ -36,6 +40,7 @@ public class PlayerInputMessage : BaseUdpMessage
 	{
 		base.Serialize(writer);
 
+		writer.Write(PlayerId);
 		writer.Write(_up);
 		writer.Write(_right);
 		writer.Write(_down);

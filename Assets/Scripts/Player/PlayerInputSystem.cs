@@ -12,7 +12,7 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 	private Dictionary<uint, Vector3> _inputHistory = new Dictionary<uint, Vector3>();
 	private uint _firstKeyOfInputHistory = 0;
 	private int _inputHistoryLength = 30;
-	private Player _localPlayer = null;
+	private ControlledPlayer _localPlayer = null;
 
 	public PlayerInputSystem(LocalClient client, GameLoop loop, PlayerRegistry playerRegistry)
 	{
@@ -37,14 +37,14 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 
 			if (up || right || down || left)
 			{
-				var inputMessage = new PlayerInputMessage(up, right, down, left);
+				var inputMessage = new PlayerInputMessage(_client.LocalPlayerId, up, right, down, left);
 				Vector3 input = inputMessage.GetMovement();
 				HandleInputHistory(input);
 				_client.SendMessage(inputMessage);
 
 				if (_localPlayer == null)
 				{
-					_localPlayer = _playerRegistry.GetPlayerById(_client.LocalPlayerId);
+					_localPlayer = _playerRegistry.GetControlledPlayerById(_client.LocalPlayerId);
 				}
 
 				_localPlayer.BufferInput(new InputData(input, tickIndex + 1));

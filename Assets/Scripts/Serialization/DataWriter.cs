@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 public class DataWriter
 {
@@ -41,6 +42,13 @@ public class DataWriter
 
         _writer.Write(Encoding.ASCII.GetBytes(value));
     }
+
+	public void Write(Vector3 vector)
+	{
+		_writer.Write(vector.x);
+		_writer.Write(vector.y);
+		_writer.Write(vector.z);
+	}
 
     public byte[] Finalize()
     {

@@ -18,8 +18,7 @@ public class PlayerInputMessageHandler : BaseHandler<PlayerInputMessage>
 
 	public override void Handle(PlayerInputMessage message)
 	{
-		Player player = _playerRegistry.GetPlayerByUserName(message.Sender.ToString());
+		ControlledPlayer player = _playerRegistry.GetControlledPlayerById(message.PlayerId);
 		player.BufferInput(new InputData(message.GetMovement(), message.TickIndex));
-
 	}
 }

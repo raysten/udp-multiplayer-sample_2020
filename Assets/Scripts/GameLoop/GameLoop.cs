@@ -6,7 +6,6 @@ using Zenject;
 
 public class GameLoop : MonoBehaviour
 {
-	private Settings _settings;
 	private DebugScreen _debugScreen;
 
 	private List<IUpdatable> _subscribers = new List<IUpdatable>();
@@ -19,9 +18,8 @@ public class GameLoop : MonoBehaviour
 	public float BaseTimeStep { get; private set; }
 
 	[Inject]
-	public void Construct(Settings settings, DebugScreen debugScreen)
+	public void Construct(DebugScreen debugScreen)
 	{
-		_settings = settings;
 		_debugScreen = debugScreen;
 	}
 
@@ -48,11 +46,5 @@ public class GameLoop : MonoBehaviour
 		}
 
 		TickIndex++;
-	}
-
-	[Serializable]
-	public class Settings
-	{
-		public float simulationRate;
 	}
 }

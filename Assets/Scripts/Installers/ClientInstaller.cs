@@ -10,7 +10,9 @@ public class ClientInstaller : MonoInstaller
 	[SerializeField]
 	private Button _connectButton;
 	[SerializeField]
-	private GameObject playerPrefab;
+	private GameObject controlledPlayerPrefab;
+	[SerializeField]
+	private GameObject remotePlayerPrefab;
 	[SerializeField]
 	private GameLoop gameLoop;
 	[SerializeField]
@@ -58,6 +60,7 @@ public class ClientInstaller : MonoInstaller
 	{
 		Container.BindInterfacesAndSelfTo<SpawnPlayerMessageHandler>().AsSingle();
 		Container.BindInterfacesAndSelfTo<ServerClockMessageHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<SnapshotHandler>().AsSingle();
 	}
 
 	private void InstallSpawner()
@@ -67,7 +70,8 @@ public class ClientInstaller : MonoInstaller
 
 	private void InstallPlayer()
 	{
-		Container.BindFactory<float, Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+		Container.BindFactory<float, ControlledPlayer, ControlledPlayer.Factory>().FromComponentInNewPrefab(controlledPlayerPrefab);
+		Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>().FromComponentInNewPrefab(remotePlayerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerInputSystem>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
 	}

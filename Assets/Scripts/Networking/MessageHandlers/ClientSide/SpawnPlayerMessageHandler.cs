@@ -24,10 +24,13 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 
     public override void Handle(SpawnPlayerMessage message)
     {
-		// Client snaps to server's tick + some offset which will be adjusted later by clock sync.
-		_loop.TickIndex = message.TickIndex + 5;
-		_client.LocalPlayerId = message.playerId;
-		_client.IsConnected = true;
-        _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer(message.playerName), message.playerId);
+		if (_client.LocalPlayerId == -1)
+		{
+			// Client snaps to server's tick + some offset which will be adjusted later by clock sync.
+			_loop.TickIndex = message.TickIndex + 5;
+			_client.LocalPlayerId = message.playerId;
+			_client.IsConnected = true;
+			_playerRegistry.RegisterPlayer(_spawner.SpawnControlledPlayer(), message.playerId);
+		}
     }
 }
