@@ -7,7 +7,6 @@ public class LocalClient : IInitializable
 	private MessageSerializer _serializer;
 	private MessageProcessor _messageProcessor;
 	private PortFinder _portFinder;
-	private Server.Settings _settings;
 
 	private IPEndPoint _serverEndpoint;
 
@@ -17,14 +16,12 @@ public class LocalClient : IInitializable
 	public LocalClient(
 		MessageSerializer serializer,
 		MessageProcessor messageProcessor,
-		PortFinder portFinder,
-		Server.Settings settings
+		PortFinder portFinder
 	)
 	{
 		_serializer = serializer;
 		_messageProcessor = messageProcessor;
 		_portFinder = portFinder;
-		_settings = settings;
 	}
 
 	public void Initialize()
@@ -49,7 +46,7 @@ public class LocalClient : IInitializable
 		var message = new HandshakeMessage();
 		var bytes = _serializer.SerializeMessage(message);
 		_connection.Send(_serverEndpoint, bytes);
-		_connection.Listen(OnMessageReceived, _settings.timeout);
+		_connection.Listen(OnMessageReceived);
 	}
 
 	private void OnMessageReceived(IPEndPoint endpoint, byte[] bytes)
@@ -61,6 +58,6 @@ public class LocalClient : IInitializable
 			_messageProcessor.AddMessage(message);
 		}
 
-		_connection.Listen(OnMessageReceived, _settings.timeout);
+		_connection.Listen(OnMessageReceived);
 	}
 }

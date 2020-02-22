@@ -30,7 +30,7 @@ public class Server : IInitializable
     public void Initialize()
     {
         _connection = new UdpConnection(_settings.port);
-        _connection.Listen(OnMessageReceived, _settings.timeout);
+        _connection.Listen(OnMessageReceived);
     }
 
     public void RegisterClient(string clientId, IPEndPoint remote)
@@ -77,13 +77,12 @@ public class Server : IInitializable
             _messageProcessor.AddMessage(message);
         }
 
-        _connection.Listen(OnMessageReceived, _settings.timeout);
+        _connection.Listen(OnMessageReceived);
     }
 
     [Serializable]
     public class Settings
     {
         public int port = 54123;
-        public int timeout = 5000;
     }
 }
