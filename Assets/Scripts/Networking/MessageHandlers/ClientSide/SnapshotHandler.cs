@@ -7,17 +7,20 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 	private PlayerRegistry _playerRegistry;
 	private LocalClient _localClient;
 	private PlayerSpawner _spawner;
+	private PlayerReconciler _reconciler;
 
 	public SnapshotHandler(
 		MessageProcessor messageProcessor,
 		PlayerRegistry playerRegistry,
 		LocalClient localClient,
-		PlayerSpawner spawner
+		PlayerSpawner spawner,
+		PlayerReconciler reconciler
 	) : base(messageProcessor)
 	{
 		_playerRegistry = playerRegistry;
 		_localClient = localClient;
 		_spawner = spawner;
+		_reconciler = reconciler;
 	}
 
 	public override void Handle(SnapshotMessage message)
@@ -33,6 +36,10 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 			else if (player.PlayerId != _localClient.LocalPlayerId)
 			{
 				_playerRegistry.GetRemotePlayerById(player.PlayerId).EnqueuePosition(playerData, message.TickIndex);
+			}
+			else
+			{
+				_reconciler.Reconcile(message.TickIndex, playerData.position);	
 			}
 		}
 	}

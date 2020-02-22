@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class PlayerInputMessage : BaseUdpMessage
 {
-	private bool _up;
-	private bool _right;
-	private bool _down;
-	private bool _left;
+	public Vector3 movement;
 
 	public int PlayerId { get; private set; }
 
@@ -16,13 +13,10 @@ public class PlayerInputMessage : BaseUdpMessage
 	{
 	}
 
-	public PlayerInputMessage(int playerId, bool up, bool right, bool down, bool left)
+	public PlayerInputMessage(int playerId, Vector3 movement)
 	{
 		PlayerId = playerId;
-		_up = up;
-		_right = right;
-		_down = down;
-		_left = left;
+		this.movement = movement;
 	}
 
 	public override void Deserialize(IPEndPoint remote, DataReader reader)
@@ -30,10 +24,7 @@ public class PlayerInputMessage : BaseUdpMessage
 		base.Deserialize(remote, reader);
 
 		PlayerId = reader.GetInteger();
-		_up = reader.GetBool();
-		_right = reader.GetBool();
-		_down = reader.GetBool();
-		_left = reader.GetBool();
+		movement = reader.GetVector3();
 	}
 
 	public override void Serialize(DataWriter writer)
@@ -41,37 +32,6 @@ public class PlayerInputMessage : BaseUdpMessage
 		base.Serialize(writer);
 
 		writer.Write(PlayerId);
-		writer.Write(_up);
-		writer.Write(_right);
-		writer.Write(_down);
-		writer.Write(_left);
-	}
-
-	public Vector3 GetMovement()
-	{
-		float xMovement = 0;
-		float zMovement = 0;
-
-		if (_left)
-		{
-			xMovement += -1f;
-		}
-
-		if (_right)
-		{
-			xMovement += 1f;
-		}
-
-		if (_up)
-		{
-			zMovement += 1f;
-		}
-
-		if (_down)
-		{
-			zMovement += -1f;
-		}
-
-		return new Vector3(xMovement, 0f, zMovement);
+		writer.Write(movement);
 	}
 }

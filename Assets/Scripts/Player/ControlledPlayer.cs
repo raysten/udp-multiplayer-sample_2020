@@ -5,9 +5,6 @@ using Zenject;
 
 public class ControlledPlayer : Player
 {
-	[SerializeField]
-	private CharacterController controller;
-
 	private Queue<InputData> _inputBuffer = new Queue<InputData>();
 	private Vector3 _input;
 
@@ -40,10 +37,9 @@ public class ControlledPlayer : Player
 		}
 	}
 
-	private void Move(Vector3 motion)
+	public void Move(Vector3 movement)
 	{
-		Vector3 movement = motion.normalized * Time.fixedDeltaTime * _speed;
-		controller.Move(movement);
+		transform.position += movement * _speed;
 	}
 
 	public class Factory : PlaceholderFactory<float, ControlledPlayer>

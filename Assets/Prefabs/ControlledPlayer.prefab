@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 2490978711857921837}
   - component: {fileID: 2490978711857921836}
   - component: {fileID: -2066034368886061532}
-  - component: {fileID: -5634972872987125511}
+  - component: {fileID: -4607857955557311451}
+  - component: {fileID: 519987045887271035}
   m_Layer: 0
-  m_Name: Player
+  m_Name: ControlledPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,9 +94,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f795880dbef2be458399a42060cee54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: -5634972872987125511}
---- !u!143 &-5634972872987125511
-CharacterController:
+--- !u!54 &-4607857955557311451
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490978711857921838}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &519987045887271035
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -104,11 +120,7 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

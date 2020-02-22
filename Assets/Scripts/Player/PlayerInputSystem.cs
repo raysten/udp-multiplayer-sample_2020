@@ -8,17 +8,26 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 	private LocalClient _client;
 	private GameLoop _loop;
 	private PlayerRegistry _playerRegistry;
+	private PlayerReconciler.Settings _settings;
 
-	private Dictionary<uint, Vector3> _inputHistory = new Dictionary<uint, Vector3>();
+	public Dictionary<uint, Vector3> InputHistory { get; } = new Dictionary<uint, Vector3>();
 	private uint _firstKeyOfInputHistory = 0;
-	private int _inputHistoryLength = 30;
+	private int _inputHistoryLength;
 	private ControlledPlayer _localPlayer = null;
 
-	public PlayerInputSystem(LocalClient client, GameLoop loop, PlayerRegistry playerRegistry)
+	public PlayerInputSystem(
+		LocalClient client,
+		GameLoop loop,
+		PlayerRegistry playerRegistry,
+		PlayerReconciler.Settings settings
+	)
 	{
 		_client = client;
 		_loop = loop;
 		_playerRegistry = playerRegistry;
+		_settings = settings;
+
+		_inputHistoryLength = _settings.playerPositionHistoryLength;
 	}
 
 	public void Initialize()
@@ -37,9 +46,9 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 
 			if (up || right || down || left)
 			{
-				var inputMessage = new PlayerInputMessage(_client.LocalPlayerId, up, right, down, left);
-				Vector3 input = inputMessage.GetMovement();
+				Vector3 input = GetMovement(up, right, down, left);
 				HandleInputHistory(input);
+				var inputMessage = new PlayerInputMessage(_client.LocalPlayerId, input);
 				_client.SendMessage(inputMessage);
 
 				if (_localPlayer == null)
@@ -48,6 +57,10 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 				}
 
 				_localPlayer.BufferInput(new InputData(input, tickIndex + 1));
+			}
+			else
+			{
+				HandleInputHistory(Vector3.zero);
 			}
 		}
 	}
@@ -59,12 +72,40 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 			_firstKeyOfInputHistory = _loop.TickIndex;
 		}
 
-		_inputHistory.Add(_loop.TickIndex, input);
+		InputHistory.Add(_loop.TickIndex, input);
 
-		if (_inputHistory.Count > _inputHistoryLength)
+		if (InputHistory.Count > _inputHistoryLength)
 		{
-			_inputHistory.Remove(_firstKeyOfInputHistory);
+			InputHistory.Remove(_firstKeyOfInputHistory);
 			_firstKeyOfInputHistory++;
 		}
+	}
+
+	private Vector3 GetMovement(bool up, bool right, bool down, bool left)
+	{
+		float xMovement = 0;
+		float zMovement = 0;
+
+		if (left)
+		{
+			xMovement += -1f;
+		}
+
+		if (right)
+		{
+			xMovement += 1f;
+		}
+
+		if (up)
+		{
+			zMovement += 1f;
+		}
+
+		if (down)
+		{
+			zMovement += -1f;
+		}
+
+		return new Vector3(xMovement, 0f, zMovement) * Time.fixedDeltaTime;
 	}
 }
