@@ -32,7 +32,7 @@ public class ServerSnapshotSystem : IInitializable, IUpdatable
 
 		_playersData.Clear();
 
-		foreach (Player player in _playerRegistry.Players)
+		foreach (ControlledPlayer player in _playerRegistry.ControlledPlayers)
 		{
 			var playerData = new PlayerSnapshotData(player.PlayerId, player.transform.position);
 			_playersData.Add(playerData);

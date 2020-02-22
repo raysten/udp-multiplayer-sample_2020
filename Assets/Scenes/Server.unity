@@ -245,6 +245,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2490978711857921838, guid: d3d624fb307d73542856457a96bef97b,
     type: 3}
+  remotePlayerPrefab: {fileID: 2490978711857921838, guid: 89bd7ada760429e4f8e7d642db03c3b5,
+    type: 3}
   gameLoop: {fileID: 61038465}
   debugScreen: {fileID: 345953293}
 --- !u!1 &176949540
@@ -579,7 +581,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 3.214199, z: 1e-45, w: 3.213997}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0

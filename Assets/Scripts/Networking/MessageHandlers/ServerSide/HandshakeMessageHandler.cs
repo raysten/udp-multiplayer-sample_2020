@@ -24,7 +24,7 @@ public class HandshakeMessageHandler : BaseHandler<HandshakeMessage>
 
 		if (!_server.HasClient(clientId))
 		{
-			Player player = _spawner.SpawnPlayer(clientId);
+			ControlledPlayer player = _spawner.SpawnControlledPlayer();
 			_playerRegistry.RegisterPlayer(player);
 			_server.RegisterClient(clientId, message.Sender);
 			var spawnMessage = new SpawnPlayerMessage(clientId, player.PlayerId);

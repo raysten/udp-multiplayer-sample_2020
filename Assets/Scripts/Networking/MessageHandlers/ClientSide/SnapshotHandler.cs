@@ -24,18 +24,16 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 	{
 		foreach (PlayerSnapshotData playerData in message.data)
 		{
-			Player localPlayer = _playerRegistry.Players.Find(x => x.PlayerId == playerData.playerId);
+			Player remotePlayer = _playerRegistry.Players.Find(x => x.PlayerId == playerData.playerId);
 
-			if (localPlayer == null)
+			if (remotePlayer == null)
 			{
-				// TODO: remove the need of username.
-				Player player = _playerRegistry.RegisterPlayer(_spawner.SpawnPlayer("no name"), playerData.playerId);
-				player.DisableMovementInUpdate = true;
+				Player player = _playerRegistry.RegisterPlayer(_spawner.SpawnRemotePlayer(), playerData.playerId);
 			}
-			else if (localPlayer.PlayerId != _localClient.LocalPlayerId)
+			else if (remotePlayer.PlayerId != _localClient.LocalPlayerId)
 			{
 				// TODO: set player position properly with entity interpolation.
-				localPlayer.transform.position = playerData.position;
+				remotePlayer.transform.position = playerData.position;
 			}
 		}
 	}

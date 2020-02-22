@@ -153,7 +153,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputField: {fileID: 1354582106}
   _connectButton: {fileID: 1519043408}
-  playerPrefab: {fileID: 2490978711857921838, guid: d3d624fb307d73542856457a96bef97b,
+  controlledPlayerPrefab: {fileID: 2490978711857921838, guid: d3d624fb307d73542856457a96bef97b,
+    type: 3}
+  remotePlayerPrefab: {fileID: 2490978711857921838, guid: 89bd7ada760429e4f8e7d642db03c3b5,
     type: 3}
   gameLoop: {fileID: 1522803863}
   debugScreen: {fileID: 1381253678}

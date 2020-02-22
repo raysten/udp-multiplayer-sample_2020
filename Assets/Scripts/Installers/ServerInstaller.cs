@@ -8,6 +8,8 @@ public class ServerInstaller : MonoInstaller
     [SerializeField]
     private GameObject playerPrefab;
 	[SerializeField]
+	private GameObject remotePlayerPrefab;
+	[SerializeField]
 	private GameLoop gameLoop;
 	[SerializeField]
 	private DebugScreen debugScreen;
@@ -55,7 +57,8 @@ public class ServerInstaller : MonoInstaller
 
     private void InstallPlayer()
     {
-        Container.BindFactory<float, Player, Player.Factory>().FromComponentInNewPrefab(playerPrefab);
+        Container.BindFactory<float, ControlledPlayer, ControlledPlayer.Factory>().FromComponentInNewPrefab(playerPrefab);
+        Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>().FromComponentInNewPrefab(remotePlayerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
     }
 }
