@@ -16,6 +16,8 @@ public class ClientInstaller : MonoInstaller
 	[SerializeField]
 	private GameLoop gameLoop;
 	[SerializeField]
+	private Ball ball;
+	[SerializeField]
 	private DebugScreen debugScreen;
 
 	public override void InstallBindings()
@@ -27,6 +29,7 @@ public class ClientInstaller : MonoInstaller
 		InstallMessageHandlers();
 		InstallSpawner();
 		InstallPlayer();
+		InstallBall();
 		InstallHelpers();
 		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
 	}
@@ -75,6 +78,11 @@ public class ClientInstaller : MonoInstaller
 		Container.BindInterfacesAndSelfTo<PlayerInputSystem>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerReconciler>().AsSingle();
+	}
+
+	private void InstallBall()
+	{
+		Container.BindInterfacesAndSelfTo<Ball>().FromInstance(ball).AsSingle();
 	}
 
 	private void InstallHelpers()

@@ -5,29 +5,33 @@ using UnityEngine;
 
 public class SnapshotMessage : BaseUdpMessage
 {
-	public List<PlayerSnapshotData> data = new List<PlayerSnapshotData>();
+	public List<PlayerSnapshotData> playersData = new List<PlayerSnapshotData>();
+	public Vector3 ballPosition;
 
 	public SnapshotMessage()
 	{
 	}
 
-	public SnapshotMessage(List<PlayerSnapshotData> data)
+	public SnapshotMessage(List<PlayerSnapshotData> playersData, Vector3 ballPosition)
 	{
-		this.data = data;
+		this.playersData = playersData;
+		this.ballPosition = ballPosition;
 	}
 
 	public override void Serialize(DataWriter writer)
 	{
 		base.Serialize(writer);
 
-		writer.Write(data.Count);
+		writer.Write(playersData.Count);
 
-		for (int i = 0; i < data.Count; i++)
+		for (int i = 0; i < playersData.Count; i++)
 		{
-			PlayerSnapshotData playerData = data[i];
+			PlayerSnapshotData playerData = playersData[i];
 			writer.Write(playerData.playerId);
 			writer.Write(playerData.position);
 		}
+
+		writer.Write(ballPosition);
 	}
 
 	public override void Deserialize(IPEndPoint remote, DataReader reader)
@@ -35,15 +39,17 @@ public class SnapshotMessage : BaseUdpMessage
 		base.Deserialize(remote, reader);
 
 		int playerAmount = reader.GetInteger();
-		data.Clear();
+		playersData.Clear();
 
 		for (int i = 0; i < playerAmount; i++)
 		{
 			int playerId = reader.GetInteger();
 			Vector3 playerPosition = reader.GetVector3();
 			PlayerSnapshotData playerData = new PlayerSnapshotData(playerId, playerPosition);
-			data.Add(playerData);
+			playersData.Add(playerData);
 		}
+
+		ballPosition = reader.GetVector3();
 	}
 }
 

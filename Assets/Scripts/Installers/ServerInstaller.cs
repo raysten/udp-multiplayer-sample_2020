@@ -13,6 +13,8 @@ public class ServerInstaller : MonoInstaller
 	private GameLoop gameLoop;
 	[SerializeField]
 	private DebugScreen debugScreen;
+	[SerializeField]
+	private Ball ball;
 
     public override void InstallBindings()
     {
@@ -22,6 +24,7 @@ public class ServerInstaller : MonoInstaller
         InstallMessageHandlers();
         InstallSpawner();
         InstallPlayer();
+		InstallBall();
 		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
     }
 
@@ -61,4 +64,9 @@ public class ServerInstaller : MonoInstaller
         Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>().FromComponentInNewPrefab(remotePlayerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
     }
+
+	private void InstallBall()
+	{
+		Container.BindInterfacesAndSelfTo<Ball>().FromInstance(ball).AsSingle();
+	}
 }

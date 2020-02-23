@@ -8,14 +8,21 @@ public class ServerSnapshotSystem : IInitializable, IUpdatable
 	private GameLoop _loop;
 	private PlayerRegistry _playerRegistry;
 	private Server _server;
+	private Ball _ball;
 
 	private List<PlayerSnapshotData> _playersData = new List<PlayerSnapshotData>();
 
-	public ServerSnapshotSystem(GameLoop loop, PlayerRegistry playerRegistry, Server server)
+	public ServerSnapshotSystem(
+		GameLoop loop,
+		PlayerRegistry playerRegistry,
+		Server server,
+		Ball ball
+	)
 	{
 		_loop = loop;
 		_playerRegistry = playerRegistry;
 		_server = server;
+		_ball = ball;
 	}
 
 	public void Initialize()
@@ -38,7 +45,7 @@ public class ServerSnapshotSystem : IInitializable, IUpdatable
 			_playersData.Add(playerData);
 		}
 
-		var message = new SnapshotMessage(_playersData);
+		var message = new SnapshotMessage(_playersData, _ball.transform.position);
 		_server.SendToAll(message);
 	}
 }

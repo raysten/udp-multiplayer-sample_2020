@@ -8,24 +8,27 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 	private LocalClient _localClient;
 	private PlayerSpawner _spawner;
 	private PlayerReconciler _reconciler;
+	private Ball _ball;
 
 	public SnapshotHandler(
 		MessageProcessor messageProcessor,
 		PlayerRegistry playerRegistry,
 		LocalClient localClient,
 		PlayerSpawner spawner,
-		PlayerReconciler reconciler
+		PlayerReconciler reconciler,
+		Ball ball
 	) : base(messageProcessor)
 	{
 		_playerRegistry = playerRegistry;
 		_localClient = localClient;
 		_spawner = spawner;
 		_reconciler = reconciler;
+		_ball = ball;
 	}
 
 	public override void Handle(SnapshotMessage message)
 	{
-		foreach (PlayerSnapshotData playerData in message.data)
+		foreach (PlayerSnapshotData playerData in message.playersData)
 		{
 			Player player = _playerRegistry.Players.Find(x => x.PlayerId == playerData.playerId);
 
@@ -42,5 +45,8 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 				_reconciler.Reconcile(message.TickIndex, playerData.position);	
 			}
 		}
+
+		// TODO: lerp ball position towards ball position reported by server.
+		_ball.TargetPosition = message.ballPosition;
 	}
 }
