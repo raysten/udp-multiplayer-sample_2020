@@ -31,8 +31,9 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
-		Vector3 direction = (TargetPosition - transform.position).normalized;
-		transform.position += direction * Time.fixedDeltaTime * _lerpSpeed;
+		//Vector3 direction = (TargetPosition - transform.position).normalized;
+		//transform.position += direction * Time.fixedDeltaTime * _lerpSpeed;
+		transform.position = TargetPosition;
 	}
 
 	private void OnTriggerEnter(Collider other)
