@@ -46,7 +46,6 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 			}
 		}
 
-		// TODO: lerp ball position towards ball position reported by server.
-		_ball.TargetPosition = message.ballPosition;
+		_ball.EnqueuePosition(message.ballPosition, message.TickIndex);
 	}
 }

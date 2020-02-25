@@ -12,7 +12,10 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	private GameLoop _loop;
 
-	public Vector3 TargetPosition { get; set; }
+	private Queue<InputData> _buffer = new Queue<InputData>();
+	private uint _lastReceivedTickIndex = 0;
+	private uint _lastProcessedTick = 0;
+	private int _minBufferedAmount = 3;
 
 	[Inject]
 	public void Construct(GameLoop loop)
@@ -24,20 +27,50 @@ public class Ball : MonoBehaviour, IUpdatable
 	{
 		if (_isClient)
 		{
-			TargetPosition = transform.position;
 			_loop.LateSubscribe(this);
 		}
 	}
 
 	public void Simulate(uint tickIndex)
 	{
-		//Vector3 direction = (TargetPosition - transform.position).normalized;
-		//transform.position += direction * Time.fixedDeltaTime * _lerpSpeed;
-		transform.position = TargetPosition;
+		if (_buffer.Count >= _minBufferedAmount)
+		{
+			InputData currentInput = _buffer.Dequeue();
+
+			if (_lastProcessedTick == 0)
+			{
+				_lastProcessedTick = currentInput.tickIndex - 1;
+			}
+
+			int diffToLastProcessedTick = (int)(currentInput.tickIndex - _lastProcessedTick);
+			transform.position = Vector3.Lerp(transform.position, currentInput.position, 1 / diffToLastProcessedTick);
+			_lastProcessedTick++;
+		}
+	}
+
+	public void EnqueuePosition(Vector3 position, uint tickIndex)
+	{
+		if (tickIndex > _lastReceivedTickIndex)
+		{
+			_buffer.Enqueue(new InputData(tickIndex, position));
+			_lastReceivedTickIndex = tickIndex;
+		}
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
 		// TODO: Detect goals.
+	}
+
+	public struct InputData
+	{
+		public uint tickIndex;
+		public Vector3 position;
+
+		public InputData(uint tickIndex, Vector3 position)
+		{
+			this.tickIndex = tickIndex;
+			this.position = position;
+		}
 	}
 }
