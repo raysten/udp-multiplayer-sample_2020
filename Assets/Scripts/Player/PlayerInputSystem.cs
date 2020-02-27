@@ -43,12 +43,13 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 			bool right = Input.GetKey(KeyCode.D);
 			bool down = Input.GetKey(KeyCode.S);
 			bool left = Input.GetKey(KeyCode.A);
+			bool space = Input.GetKeyDown(KeyCode.Space);
 
-			if (up || right || down || left)
+			if (up || right || down || left || space)
 			{
 				Vector3 input = GetMovement(up, right, down, left);
 				HandleInputHistory(input);
-				var inputMessage = new PlayerInputMessage(_client.LocalPlayerId, input);
+				var inputMessage = new PlayerInputMessage(_client.LocalPlayerId, input, space);
 				_client.SendMessage(inputMessage);
 
 				if (_localPlayer == null)

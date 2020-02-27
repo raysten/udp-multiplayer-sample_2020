@@ -68,5 +68,6 @@ public class ServerInstaller : MonoInstaller
 	private void InstallBall()
 	{
 		Container.BindInterfacesAndSelfTo<Ball>().FromInstance(ball).AsSingle();
+		Container.BindInterfacesAndSelfTo<BallKick>().AsSingle();
 	}
 }

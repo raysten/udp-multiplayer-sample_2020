@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerInputMessage : BaseUdpMessage
 {
 	public Vector3 movement;
+	public bool kick;
 
 	public int PlayerId { get; private set; }
 
@@ -13,10 +14,11 @@ public class PlayerInputMessage : BaseUdpMessage
 	{
 	}
 
-	public PlayerInputMessage(int playerId, Vector3 movement)
+	public PlayerInputMessage(int playerId, Vector3 movement, bool kick)
 	{
 		PlayerId = playerId;
 		this.movement = movement;
+		this.kick = kick;
 	}
 
 	public override void Deserialize(IPEndPoint remote, DataReader reader)
@@ -25,6 +27,7 @@ public class PlayerInputMessage : BaseUdpMessage
 
 		PlayerId = reader.GetInteger();
 		movement = reader.GetVector3();
+		kick = reader.GetBool();
 	}
 
 	public override void Serialize(DataWriter writer)
@@ -33,5 +36,6 @@ public class PlayerInputMessage : BaseUdpMessage
 
 		writer.Write(PlayerId);
 		writer.Write(movement);
+		writer.Write(kick);
 	}
 }

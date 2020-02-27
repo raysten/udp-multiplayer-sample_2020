@@ -17,6 +17,8 @@ public class Ball : MonoBehaviour, IUpdatable
 	private uint _lastProcessedTick = 0;
 	private int _minBufferedAmount = 3;
 
+	public Rigidbody Rigidbody { get; private set; }
+
 	[Inject]
 	public void Construct(GameLoop loop)
 	{
@@ -25,6 +27,8 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	private void Start()
 	{
+		Rigidbody = GetComponent<Rigidbody>();
+
 		if (_isClient)
 		{
 			_loop.LateSubscribe(this);
