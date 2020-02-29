@@ -27,7 +27,7 @@ public class DebugScreen : MonoBehaviour
 	{
 		textBox.text = $"Tick: {_loop.TickIndex.ToString()}" +
 			$", offset: {_loop.clientToServerOffset}" +
-			$", dt: {Time.fixedDeltaTime}" +
+			$", dt: {_loop.TimeStep}" +
 			$", rtt: {_loop.RTT}";
 	}
 }

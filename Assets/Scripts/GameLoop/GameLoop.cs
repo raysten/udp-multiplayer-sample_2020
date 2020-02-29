@@ -17,6 +17,13 @@ public class GameLoop : MonoBehaviour
 
 	public uint TickIndex { get; set; }
 	public float BaseTimeStep { get; private set; }
+	public float TimeStep {
+		get => Time.fixedDeltaTime;
+		set
+		{
+			Time.fixedDeltaTime = value;
+		}
+	}
 
 	[Inject]
 	public void Construct(DebugScreen debugScreen)
@@ -26,7 +33,7 @@ public class GameLoop : MonoBehaviour
 
 	private void Start()
 	{
-		BaseTimeStep = Time.fixedDeltaTime;
+		BaseTimeStep = TimeStep;
 	}
 
 	private void FixedUpdate()

@@ -107,6 +107,6 @@ public class PlayerInputSystem : IInitializable, IUpdatable
 			zMovement += -1f;
 		}
 
-		return new Vector3(xMovement, 0f, zMovement) * Time.fixedDeltaTime;
+		return new Vector3(xMovement, 0f, zMovement) * _loop.TimeStep;
 	}
 }

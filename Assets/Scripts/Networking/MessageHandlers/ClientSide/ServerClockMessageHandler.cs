@@ -29,7 +29,7 @@ public class ServerClockMessageHandler : BaseHandler<ServerClockMessage>
 		}
 
 		int diff = message.tickOffset - _rtt.value / 2;
-		Time.fixedDeltaTime = Mathf.Clamp(
+		_loop.TimeStep = Mathf.Clamp(
 			_loop.BaseTimeStep + _settings.clientClockAdjustmentCurve.Evaluate(diff),
 			_settings.minTimeStep,
 			_settings.maxTimeStep
