@@ -11,6 +11,7 @@ public class Ball : MonoBehaviour, IUpdatable
 	private float _lerpSpeed = 3f;
 
 	private GameLoop _loop;
+	private Settings _settings;
 
 	private Queue<InputData> _buffer = new Queue<InputData>();
 	private uint _lastReceivedTickIndex = 0;
@@ -20,9 +21,10 @@ public class Ball : MonoBehaviour, IUpdatable
 	public Rigidbody Rigidbody { get; private set; }
 
 	[Inject]
-	public void Construct(GameLoop loop)
+	public void Construct(GameLoop loop, Settings settings)
 	{
 		_loop = loop;
+		_settings = settings;
 	}
 
 	private void Start()
@@ -63,7 +65,12 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	private void OnTriggerEnter(Collider other)
 	{
-		// TODO: Detect goals.
+		if (_isClient == false && (other.tag == _settings.leftGoalTag || other.tag == _settings.rightGoalTag))
+		{
+			transform.position = Vector3.zero;
+			Rigidbody.velocity = Vector3.zero;
+			Rigidbody.angularVelocity = Vector3.zero;
+		}
 	}
 
 	public struct InputData
@@ -76,5 +83,12 @@ public class Ball : MonoBehaviour, IUpdatable
 			this.tickIndex = tickIndex;
 			this.position = position;
 		}
+	}
+
+	[System.Serializable]
+	public class Settings
+	{
+		public string leftGoalTag;
+		public string rightGoalTag;
 	}
 }

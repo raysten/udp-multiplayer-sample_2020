@@ -10,13 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7b138173f1702a4d93489fc41ceac5e, type: 3}
-  m_Name: ServerSettings
+  m_Name: GameSettings
   m_EditorClassIdentifier: 
   serverConfiguration:
     port: 54120
-    timeout: 5000
-  gameLoop:
-    simulationRate: 0.033333335
   player:
     speed: 4
   clockAdjustmentCurve:
@@ -73,3 +70,13 @@ MonoBehaviour:
       m_RotationOrder: 4
     minTimeStep: 0.01
     maxTimeStep: 0.04
+  reconcilation:
+    playerPositionHistoryLength: 30
+    positionDifferenceSqrEpsilon: 0.002
+  ballSettings:
+    ball:
+      leftGoalTag: GoalLeft
+      rightGoalTag: GoalRight
+    kick:
+      minSqrDistanceToPlayer: 3
+      force: 7.5
