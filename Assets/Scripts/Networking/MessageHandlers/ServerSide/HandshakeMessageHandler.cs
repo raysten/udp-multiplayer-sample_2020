@@ -25,14 +25,16 @@ public class HandshakeMessageHandler : BaseHandler<HandshakeMessage>
 		if (!_server.HasClient(clientId))
 		{
 			ControlledPlayer player = _spawner.SpawnControlledPlayer();
-			_playerRegistry.RegisterPlayer(player);
+			_playerRegistry.RegisterPlayer(player, clientId);
 			_server.RegisterClient(clientId, message.Sender);
-			var spawnMessage = new SpawnPlayerMessage(clientId, player.PlayerId);
-			_server.SendMessage(spawnMessage, message.Sender);
 		}
 		else
 		{
 			Debug.LogWarning("Client with this id is already connected.");
 		}
+
+		var serverPlayer = _playerRegistry.GetControlledPlayerByClientId(clientId);
+		var spawnMessage = new SpawnPlayerMessage(clientId, serverPlayer.PlayerId);
+		_server.SendMessage(spawnMessage, message.Sender);
 	}
 }

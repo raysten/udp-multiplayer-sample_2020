@@ -10,6 +10,7 @@ public abstract class Player : MonoBehaviour, IUpdatable
 	protected GameLoop _loop;
 
 	public int PlayerId { get; set; }
+	public string ClientId { get; set; }
 
 	public void Start()
 	{

@@ -28,6 +28,11 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 
 	public override void Handle(SnapshotMessage message)
 	{
+		if (_localClient.IsConnected == false)
+		{
+			return;
+		}
+
 		foreach (PlayerSnapshotData playerData in message.playersData)
 		{
 			Player player = _playerRegistry.Players.Find(x => x.PlayerId == playerData.playerId);

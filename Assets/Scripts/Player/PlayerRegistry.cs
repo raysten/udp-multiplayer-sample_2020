@@ -14,10 +14,11 @@ public class PlayerRegistry
 		player.PlayerId = Players.Count;
 	}
 
-	public void RegisterPlayer(ControlledPlayer player)
+	public void RegisterPlayer(ControlledPlayer player, string clientId)
 	{
 		RegisterPlayer(player as Player);
 		ControlledPlayers.Add(player);
+		player.ClientId = clientId;
 	}
 
 	public Player RegisterPlayer(Player player, int id)
@@ -59,5 +60,10 @@ public class PlayerRegistry
 	public RemotePlayer GetRemotePlayerById(int id)
 	{
 		return RemotePlayers.Find(p => p.PlayerId == id);
+	}
+
+	public ControlledPlayer GetControlledPlayerByClientId(string id)
+	{
+		return ControlledPlayers.Find(p => p.ClientId == id);
 	}
 }
