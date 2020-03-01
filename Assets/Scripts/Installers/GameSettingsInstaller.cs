@@ -15,6 +15,8 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
 	private PlayerReconciler.Settings reconcilation;
 	[SerializeField]
 	private BallSettings ballSettings;
+	[SerializeField]
+	private RemoteEntity.Settings remoteEntity;
 
     public override void InstallBindings()
     {
@@ -23,6 +25,7 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
 		Container.BindInstance(clockAdjustmentCurve).AsSingle();
 		Container.BindInstance(reconcilation).AsSingle();
 		InstallBall();
+		Container.BindInstance(remoteEntity).AsSingle();
     }
 
 	private void InstallBall()

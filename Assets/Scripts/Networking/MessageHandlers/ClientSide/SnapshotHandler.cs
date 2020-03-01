@@ -38,7 +38,7 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 			}
 			else if (player.PlayerId != _localClient.LocalPlayerId)
 			{
-				_playerRegistry.GetRemotePlayerById(player.PlayerId).EnqueuePosition(playerData, message.TickIndex);
+				_playerRegistry.GetRemotePlayerById(player.PlayerId).EnqueuePosition(playerData.position, message.TickIndex);
 			}
 			else
 			{

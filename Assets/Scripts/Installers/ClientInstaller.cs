@@ -74,8 +74,13 @@ public class ClientInstaller : MonoInstaller
 
 	private void InstallPlayer()
 	{
-		Container.BindFactory<float, ControlledPlayer, ControlledPlayer.Factory>().FromComponentInNewPrefab(controlledPlayerPrefab);
-		Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>().FromComponentInNewPrefab(remotePlayerPrefab);
+		Container.BindFactory<float, ControlledPlayer, ControlledPlayer.Factory>()
+			.FromComponentInNewPrefab(controlledPlayerPrefab);
+		Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>()
+			.FromComponentInNewPrefab(remotePlayerPrefab);
+		//Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>()
+		//	.FromSubContainerResolve()
+		//	.ByNewContextPrefab<RemotePlayerInstaller>(remotePlayerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerInputSystem>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
 		Container.BindInterfacesAndSelfTo<PlayerReconciler>().AsSingle();

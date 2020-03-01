@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-// TODO: Reuse code for RemotePlayer as it's also interpolated entity.
-public class Ball : MonoBehaviour, IUpdatable
+public class Ball : MonoBehaviour, IUpdatable, IRemoteEntity
 {
 	[SerializeField]
 	private bool _isClient;
@@ -13,19 +10,16 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	private GameLoop _loop;
 	private Settings _settings;
-
-	private Queue<InputData> _buffer = new Queue<InputData>();
-	private uint _lastReceivedTickIndex = 0;
-	private uint _lastProcessedTick = 0;
-	private int _maxBufferedAmount = 6; // TODO: Settings.
+	private RemoteEntity _entity;
 
 	public Rigidbody Rigidbody { get; private set; }
 
 	[Inject]
-	public void Construct(GameLoop loop, Settings settings)
+	public void Construct(GameLoop loop, Settings settings, RemoteEntity.Settings entitySettings)
 	{
 		_loop = loop;
 		_settings = settings;
+		_entity = new RemoteEntity(transform, entitySettings);
 	}
 
 	private void Start()
@@ -40,43 +34,12 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
-		if (_buffer.Count > 0)
-		{
-			InputData currentInput = _buffer.Dequeue();
-			transform.position = currentInput.position;
-		}
+		_entity.Simulate();
 	}
 
 	public void EnqueuePosition(Vector3 position, uint tickIndex)
 	{
-		if (tickIndex > _lastReceivedTickIndex)
-		{
-			int extraDiffToLastReceivedTickIndex = (int)(tickIndex - _lastReceivedTickIndex - 1);
-			var freeBufferSpace = _maxBufferedAmount - _buffer.Count - 1;
-
-			if (extraDiffToLastReceivedTickIndex > 0 && freeBufferSpace > 0)
-			{
-				int extraInterpolatedTicks = Mathf.Min(extraDiffToLastReceivedTickIndex, freeBufferSpace);
-
-				for (int i = 0; i < extraInterpolatedTicks; i++)
-				{
-					_buffer.Enqueue(
-						new InputData(
-							(uint)(_lastReceivedTickIndex + i + 1),
-							Vector3.Lerp(transform.position, position, (float)(1 + i) / extraInterpolatedTicks + 1)
-						)
-					);
-				}
-			}
-
-			_buffer.Enqueue(new InputData(tickIndex, position));
-			_lastReceivedTickIndex = tickIndex;
-		}
-
-		if (_buffer.Count > _maxBufferedAmount)
-		{
-			_buffer.Dequeue();
-		}
+		_entity.EnqueuePosition(position, tickIndex);
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -86,18 +49,6 @@ public class Ball : MonoBehaviour, IUpdatable
 			transform.position = new Vector3(0f, 3f, 0f);
 			Rigidbody.velocity = Vector3.zero;
 			Rigidbody.angularVelocity = Vector3.zero;
-		}
-	}
-
-	public struct InputData
-	{
-		public uint tickIndex;
-		public Vector3 position;
-
-		public InputData(uint tickIndex, Vector3 position)
-		{
-			this.tickIndex = tickIndex;
-			this.position = position;
 		}
 	}
 
