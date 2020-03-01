@@ -23,11 +23,11 @@ public class DebugScreen : MonoBehaviour
 		extraBox.text += text + "\n";
 	}
 
-	private void Update()
-	{
-		textBox.text = $"Tick: {_loop.TickIndex.ToString()}" +
-			$", offset: {_loop.clientToServerOffset}" +
-			$", dt: {_loop.TimeStep}" +
-			$", rtt: {_loop.RTT}";
-	}
+	//private void Update()
+	//{
+	//	textBox.text = $"Tick: {_loop.TickIndex.ToString()}" +
+	//		$", offset: {_loop.clientToServerOffset}" +
+	//		$", dt: {_loop.TimeStep}" +
+	//		$", rtt: {_loop.RTT}";
+	//}
 }
