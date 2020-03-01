@@ -41,7 +41,7 @@ public class Ball : MonoBehaviour, IUpdatable
 	{
 		if (_buffer.Count >= _minBufferedAmount)
 		{
-			InputData currentInput = _buffer.Dequeue();
+			InputData currentInput = _buffer.Peek();
 
 			if (_lastProcessedTick == 0)
 			{
@@ -49,7 +49,14 @@ public class Ball : MonoBehaviour, IUpdatable
 			}
 
 			int diffToLastProcessedTick = (int)(currentInput.tickIndex - _lastProcessedTick);
-			transform.position = Vector3.Lerp(transform.position, currentInput.position, 1 / diffToLastProcessedTick);
+			transform.position = Vector3.Lerp(transform.position, currentInput.position, 1f / diffToLastProcessedTick);
+
+			// Don't dequeue input if we're not at its tick yet.
+			if (diffToLastProcessedTick == 1)
+			{
+				_buffer.Dequeue();
+			}
+
 			_lastProcessedTick++;
 		}
 	}
@@ -67,7 +74,7 @@ public class Ball : MonoBehaviour, IUpdatable
 	{
 		if (_isClient == false && (other.tag == _settings.leftGoalTag || other.tag == _settings.rightGoalTag))
 		{
-			transform.position = Vector3.zero;
+			transform.position = new Vector3(0f, 3f, 0f);
 			Rigidbody.velocity = Vector3.zero;
 			Rigidbody.angularVelocity = Vector3.zero;
 		}

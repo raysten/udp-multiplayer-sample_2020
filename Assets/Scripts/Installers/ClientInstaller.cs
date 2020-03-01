@@ -31,6 +31,7 @@ public class ClientInstaller : MonoInstaller
 		InstallPlayer();
 		InstallBall();
 		InstallHelpers();
+		InstallEvents();
 		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
 	}
 
@@ -88,5 +89,10 @@ public class ClientInstaller : MonoInstaller
 	private void InstallHelpers()
 	{
 		Container.BindInterfacesAndSelfTo<PortFinder>().AsSingle();
+	}
+
+	private void InstallEvents()
+	{
+		Container.BindInterfacesAndSelfTo<EventBus>().AsSingle();
 	}
 }

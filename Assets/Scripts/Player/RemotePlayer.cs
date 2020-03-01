@@ -12,10 +12,9 @@ public class RemotePlayer : Player
 
 	public override void Simulate(uint tickIndex)
 	{
-		//Debug.Log($"Remote player update, buffer size: {_buffer.Count}");
 		if (_buffer.Count >= _minBufferedAmount)
 		{
-			PlayerSnapshotData currentInput = _buffer.Dequeue();
+			PlayerSnapshotData currentInput = _buffer.Peek();
 
 			if (_lastProcessedTick == 0)
 			{
@@ -23,14 +22,20 @@ public class RemotePlayer : Player
 			}
 
 			int diffToLastProcessedTick = (int)(currentInput.tickIndex - _lastProcessedTick);
-			transform.position = Vector3.Lerp(transform.position, currentInput.position, 1 / diffToLastProcessedTick);
+
+			// Don't dequeue input if we're not at its tick yet.
+			if (diffToLastProcessedTick == 1)
+			{
+				_buffer.Dequeue();
+			}
+
+			transform.position = Vector3.Lerp(transform.position, currentInput.position, 1f / diffToLastProcessedTick);
 			_lastProcessedTick++;
 		}
 	}
 
 	public void EnqueuePosition(PlayerSnapshotData inputData, uint tickIndex)
 	{
-		//Debug.Log("Enqueue remote player input");
 		if (tickIndex > _lastReceivedTickIndex)
 		{
 			inputData.tickIndex = tickIndex;

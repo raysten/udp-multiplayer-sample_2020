@@ -24,6 +24,11 @@ public class MessageProcessor : IInitializable, IUpdatable
 
 	public void Simulate(uint tickIndex)
     {
+		if (_messages.Count == 0)
+		{
+			return;
+		}
+
 		_messagesCopy.Clear();
 		_messagesCopy.AddRange(_messages);
 		_messages.Clear();
@@ -32,7 +37,7 @@ public class MessageProcessor : IInitializable, IUpdatable
 		{
 			IUdpMessage message = _messagesCopy[i];
 
-			if (_handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
+			if (message != null && _handlers.TryGetValue(message.GetType(), out List<IMessageHandler> handlers))
 			{
 				foreach (var r in handlers)
 				{

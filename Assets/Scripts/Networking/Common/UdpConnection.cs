@@ -18,9 +18,14 @@ public class UdpConnection
         _udpClient.Send(message, message.Length, remoteAddress);
     }
 
-    public void Listen(Action<IPEndPoint, byte[]> action)
+    public void Listen(Action<IPEndPoint, byte[]> action, int timeout = 5000)
     {
-        _udpClient.BeginReceive(new AsyncCallback(OnMessageReceived), action);
+        var result = _udpClient.BeginReceive(new AsyncCallback(OnMessageReceived), action);
+
+		if (timeout > 0)
+		{
+			result.AsyncWaitHandle.WaitOne(timeout);
+		}
     }
 
     private void OnMessageReceived(IAsyncResult ar)

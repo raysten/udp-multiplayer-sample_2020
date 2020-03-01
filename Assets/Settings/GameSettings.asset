@@ -79,4 +79,4 @@ MonoBehaviour:
       rightGoalTag: GoalRight
     kick:
       minSqrDistanceToPlayer: 3
-      force: 7.5
+      force: 5

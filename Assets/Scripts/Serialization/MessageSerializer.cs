@@ -54,6 +54,11 @@ public class MessageSerializer
 
     public IUdpMessage ParseMessage(IPEndPoint remote, byte[] data)
     {
+		if (remote == null || data == null)
+		{
+			return null;
+		}
+
         var payloadData = IsValid(data);
 
         if (payloadData != null)

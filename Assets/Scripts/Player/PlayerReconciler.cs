@@ -61,11 +61,6 @@ public class PlayerReconciler : IInitializable, IUpdatable
 		if (_positionHistory.TryGetValue(serverTickIndex, out Vector3 pastPosition) 
 			&& (position - pastPosition).sqrMagnitude > _settings.positionDifferenceSqrEpsilon)
 		{
-			// TODO: remove
-			//Debug.Log($"Reconciled; Server tick: {serverTickIndex}," +
-			//	$" clientCurrentTick: {_loop.TickIndex}, " +
-			//	$"position diff: {(position - pastPosition).magnitude}");
-
 			_positionHistory[serverTickIndex] = position;
 			_localPlayer.transform.position = position;
 

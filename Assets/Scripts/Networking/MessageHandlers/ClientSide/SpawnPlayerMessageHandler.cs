@@ -7,19 +7,22 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 	private GameLoop _loop;
 	private LocalClient _client;
 	private PlayerRegistry _playerRegistry;
+	private EventBus _events;
 
     public SpawnPlayerMessageHandler(
         MessageProcessor messageProcessor,
         PlayerSpawner spawner,
 		GameLoop loop,
 		LocalClient client,
-		PlayerRegistry playerRegistry
+		PlayerRegistry playerRegistry,
+		EventBus events
     ) : base(messageProcessor)
     {
         _spawner = spawner;
 		_loop = loop;
 		_client = client;
 		_playerRegistry = playerRegistry;
+		_events = events;
 	}
 
     public override void Handle(SpawnPlayerMessage message)
@@ -31,6 +34,7 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 			_client.LocalPlayerId = message.playerId;
 			_client.IsConnected = true;
 			_playerRegistry.RegisterPlayer(_spawner.SpawnControlledPlayer(), message.playerId);
+			_events.LocalPlayerSpawned?.Invoke();
 		}
     }
 }
