@@ -22,7 +22,7 @@ public class ConnectionGUI : IInitializable, IDisposable
 	public void Initialize()
 	{
 		_connectionButton.onClick.AddListener(Connect);
-		_inputField.text = "192.168.8.110:54120";
+		_inputField.text = "192.168.43.235:54120";
 
 		_events.LocalPlayerSpawned += OnLocalPlayerSpawned;
 	}

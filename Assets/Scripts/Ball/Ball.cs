@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
+// TODO: Reuse code for RemotePlayer as it's also interpolated entity.
 public class Ball : MonoBehaviour, IUpdatable
 {
 	[SerializeField]
@@ -16,7 +17,7 @@ public class Ball : MonoBehaviour, IUpdatable
 	private Queue<InputData> _buffer = new Queue<InputData>();
 	private uint _lastReceivedTickIndex = 0;
 	private uint _lastProcessedTick = 0;
-	private int _minBufferedAmount = 3;
+	private int _maxBufferedAmount = 6; // TODO: Settings.
 
 	public Rigidbody Rigidbody { get; private set; }
 
@@ -39,25 +40,10 @@ public class Ball : MonoBehaviour, IUpdatable
 
 	public void Simulate(uint tickIndex)
 	{
-		if (_buffer.Count >= _minBufferedAmount)
+		if (_buffer.Count > 0)
 		{
-			InputData currentInput = _buffer.Peek();
-
-			if (_lastProcessedTick == 0)
-			{
-				_lastProcessedTick = currentInput.tickIndex - 1;
-			}
-
-			int diffToLastProcessedTick = (int)(currentInput.tickIndex - _lastProcessedTick);
-			transform.position = Vector3.Lerp(transform.position, currentInput.position, 1f / diffToLastProcessedTick);
-
-			// Don't dequeue input if we're not at its tick yet.
-			if (diffToLastProcessedTick == 1)
-			{
-				_buffer.Dequeue();
-			}
-
-			_lastProcessedTick++;
+			InputData currentInput = _buffer.Dequeue();
+			transform.position = currentInput.position;
 		}
 	}
 
@@ -65,8 +51,31 @@ public class Ball : MonoBehaviour, IUpdatable
 	{
 		if (tickIndex > _lastReceivedTickIndex)
 		{
+			int extraDiffToLastReceivedTickIndex = (int)(tickIndex - _lastReceivedTickIndex - 1);
+			var freeBufferSpace = _maxBufferedAmount - _buffer.Count - 1;
+
+			if (extraDiffToLastReceivedTickIndex > 0 && freeBufferSpace > 0)
+			{
+				int extraInterpolatedTicks = Mathf.Min(extraDiffToLastReceivedTickIndex, freeBufferSpace);
+
+				for (int i = 0; i < extraInterpolatedTicks; i++)
+				{
+					_buffer.Enqueue(
+						new InputData(
+							(uint)(_lastReceivedTickIndex + i + 1),
+							Vector3.Lerp(transform.position, position, (float)(1 + i) / extraInterpolatedTicks + 1)
+						)
+					);
+				}
+			}
+
 			_buffer.Enqueue(new InputData(tickIndex, position));
 			_lastReceivedTickIndex = tickIndex;
+		}
+
+		if (_buffer.Count > _maxBufferedAmount)
+		{
+			_buffer.Dequeue();
 		}
 	}
 
