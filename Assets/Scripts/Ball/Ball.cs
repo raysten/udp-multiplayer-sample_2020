@@ -9,15 +9,22 @@ public class Ball : MonoBehaviour, IUpdatable, IRemoteEntity
 	private float _lerpSpeed = 3f;
 
 	private GameLoop _loop;
+	private ScoreManager _score;
 	private Settings _settings;
 	private RemoteEntity _entity;
 
 	public Rigidbody Rigidbody { get; private set; }
 
 	[Inject]
-	public void Construct(GameLoop loop, Settings settings, RemoteEntity.Settings entitySettings)
+	public void Construct(
+		GameLoop loop,
+		[InjectOptional] ScoreManager score,
+		Settings settings,
+		RemoteEntity.Settings entitySettings
+	)
 	{
 		_loop = loop;
+		_score = score;
 		_settings = settings;
 		_entity = new RemoteEntity(transform, entitySettings);
 	}
@@ -49,6 +56,20 @@ public class Ball : MonoBehaviour, IUpdatable, IRemoteEntity
 			transform.position = new Vector3(0f, 3f, 0f);
 			Rigidbody.velocity = Vector3.zero;
 			Rigidbody.angularVelocity = Vector3.zero;
+
+			if (_score != null)
+			{
+				if (other.tag == _settings.leftGoalTag)
+				{
+					_score.RightScore++;
+				}
+				else if (other.tag == _settings.rightGoalTag)
+				{
+					_score.LeftScore++;
+				}
+
+				_score.PropagateScore();
+			}
 		}
 	}
 

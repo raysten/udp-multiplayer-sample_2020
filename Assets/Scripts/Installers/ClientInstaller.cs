@@ -18,6 +18,8 @@ public class ClientInstaller : MonoInstaller
 	[SerializeField]
 	private Ball ball;
 	[SerializeField]
+	private ScoreUI scoreUI;
+	[SerializeField]
 	private DebugScreen debugScreen;
 
 	public override void InstallBindings()
@@ -31,7 +33,8 @@ public class ClientInstaller : MonoInstaller
 		InstallPlayer();
 		InstallBall();
 		InstallHelpers();
-		InstallEvents();
+		InstallMisc();
+		InstallScore();
 		Container.BindInterfacesAndSelfTo<DebugScreen>().FromInstance(debugScreen).AsSingle();
 	}
 
@@ -65,6 +68,7 @@ public class ClientInstaller : MonoInstaller
 		Container.BindInterfacesAndSelfTo<SpawnPlayerMessageHandler>().AsSingle();
 		Container.BindInterfacesAndSelfTo<ServerClockMessageHandler>().AsSingle();
 		Container.BindInterfacesAndSelfTo<SnapshotHandler>().AsSingle();
+		Container.BindInterfacesAndSelfTo<ScoreMessageHandler>().AsSingle();
 	}
 
 	private void InstallSpawner()
@@ -93,8 +97,13 @@ public class ClientInstaller : MonoInstaller
 		Container.BindInterfacesAndSelfTo<PortFinder>().AsSingle();
 	}
 
-	private void InstallEvents()
+	private void InstallMisc()
 	{
 		Container.BindInterfacesAndSelfTo<EventBus>().AsSingle();
+	}
+
+	private void InstallScore()
+	{
+		Container.BindInterfacesAndSelfTo<ScoreUI>().FromInstance(scoreUI).AsSingle();
 	}
 }
