@@ -19,13 +19,13 @@ public class PlayerSpawner
 		_settings = settings;
 	}
 
-    public ControlledPlayer SpawnControlledPlayer()
+    public ControlledPlayer SpawnControlledPlayer(Team team)
     {
-		return _controlledPlayerFactory.Create(_settings.speed);
+		return _controlledPlayerFactory.Create(team);
     }
 
-	public RemotePlayer SpawnRemotePlayer()
+	public RemotePlayer SpawnRemotePlayer(Team team)
 	{
-		return _remotePlayerFactory.Create(_settings.speed);
+		return _remotePlayerFactory.Create(team);
 	}
 }

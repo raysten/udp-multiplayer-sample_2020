@@ -24,7 +24,7 @@ public class HandshakeMessageHandler : BaseHandler<HandshakeMessage>
 
 		if (!_server.HasClient(clientId))
 		{
-			ControlledPlayer player = _spawner.SpawnControlledPlayer();
+			ControlledPlayer player = _spawner.SpawnControlledPlayer(_playerRegistry.GetNextTeamAssignment());
 			_playerRegistry.RegisterPlayer(player, clientId);
 			_server.RegisterClient(clientId, message.Sender);
 		}
@@ -34,7 +34,7 @@ public class HandshakeMessageHandler : BaseHandler<HandshakeMessage>
 		}
 
 		var serverPlayer = _playerRegistry.GetControlledPlayerByClientId(clientId);
-		var spawnMessage = new SpawnPlayerMessage(clientId, serverPlayer.PlayerId);
+		var spawnMessage = new SpawnPlayerMessage(clientId, serverPlayer.PlayerId, serverPlayer.Team);
 		_server.SendMessage(spawnMessage, message.Sender);
 	}
 }

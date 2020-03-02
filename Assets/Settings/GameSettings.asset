@@ -16,6 +16,8 @@ MonoBehaviour:
     port: 54120
   player:
     speed: 4
+    leftTeamColor: {r: 0.8396226, g: 0.21782663, b: 0.21782663, a: 1}
+    rightTeamColor: {r: 0.33579564, g: 0.67887306, b: 0.9245283, a: 1}
   clockAdjustmentCurve:
     clientClockAdjustmentCurve:
       serializedVersion: 2
@@ -80,3 +82,5 @@ MonoBehaviour:
     kick:
       minSqrDistanceToPlayer: 3
       force: 5
+  remoteEntity:
+    bufferSize: 6

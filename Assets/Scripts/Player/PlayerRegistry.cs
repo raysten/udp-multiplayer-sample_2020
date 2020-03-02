@@ -66,4 +66,12 @@ public class PlayerRegistry
 	{
 		return ControlledPlayers.Find(p => p.ClientId == id);
 	}
+
+	public Team GetNextTeamAssignment()
+	{
+		var leftPlayers = Players.FindAll(p => p.Team == Team.Left);
+		var rightPlayers = Players.FindAll(p => p.Team == Team.Right);
+
+		return rightPlayers.Count >= leftPlayers.Count ? Team.Left : Team.Right;
+	}
 }

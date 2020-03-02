@@ -60,8 +60,8 @@ public class ServerInstaller : MonoInstaller
 
     private void InstallPlayer()
     {
-        Container.BindFactory<float, ControlledPlayer, ControlledPlayer.Factory>().FromComponentInNewPrefab(playerPrefab);
-        Container.BindFactory<float, RemotePlayer, RemotePlayer.Factory>().FromComponentInNewPrefab(remotePlayerPrefab);
+        Container.BindFactory<Team, ControlledPlayer, ControlledPlayer.Factory>().FromComponentInNewPrefab(playerPrefab);
+        Container.BindFactory<Team, RemotePlayer, RemotePlayer.Factory>().FromComponentInNewPrefab(remotePlayerPrefab);
 		Container.BindInterfacesAndSelfTo<PlayerRegistry>().AsSingle();
     }
 

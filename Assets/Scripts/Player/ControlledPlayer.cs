@@ -39,10 +39,10 @@ public class ControlledPlayer : Player
 
 	public void Move(Vector3 movement)
 	{
-		transform.position += movement * _speed;
+		transform.position += movement * _settings.speed;
 	}
 
-	public class Factory : PlaceholderFactory<float, ControlledPlayer>
+	public class Factory : PlaceholderFactory<Team, ControlledPlayer>
     {
     }
 }

@@ -7,15 +7,17 @@ public class SpawnPlayerMessage : BaseUdpMessage
 {
 	public string playerName;
 	public int playerId;
+	public Team team;
 
 	public SpawnPlayerMessage()
 	{
 	}
 
-	public SpawnPlayerMessage(string playerName, int playerId)
+	public SpawnPlayerMessage(string playerName, int playerId, Team team)
 	{
 		this.playerName = playerName;
 		this.playerId = playerId;
+		this.team = team;
 	}
 
 	public override void Deserialize(IPEndPoint remote, DataReader reader)
@@ -24,6 +26,7 @@ public class SpawnPlayerMessage : BaseUdpMessage
 
 		playerName = reader.GetString();
 		playerId = reader.GetInteger();
+		team = (Team)reader.GetInteger();
 	}
 
 	public override void Serialize(DataWriter writer)
@@ -32,5 +35,6 @@ public class SpawnPlayerMessage : BaseUdpMessage
 
 		writer.Write(playerName);
 		writer.Write(playerId);
+		writer.Write((int)team);
 	}
 }

@@ -39,7 +39,7 @@ public class SnapshotHandler : BaseHandler<SnapshotMessage>
 
 			if (player == null)
 			{
-				_playerRegistry.RegisterPlayer(_spawner.SpawnRemotePlayer(), playerData.playerId);
+				_playerRegistry.RegisterPlayer(_spawner.SpawnRemotePlayer(playerData.team), playerData.playerId);
 			}
 			else if (player.PlayerId != _localClient.LocalPlayerId)
 			{

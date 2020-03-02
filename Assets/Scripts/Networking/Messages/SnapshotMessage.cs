@@ -29,6 +29,7 @@ public class SnapshotMessage : BaseUdpMessage
 			PlayerSnapshotData playerData = playersData[i];
 			writer.Write(playerData.playerId);
 			writer.Write(playerData.position);
+			writer.Write((int)playerData.team);
 		}
 
 		writer.Write(ballPosition);
@@ -45,7 +46,8 @@ public class SnapshotMessage : BaseUdpMessage
 		{
 			int playerId = reader.GetInteger();
 			Vector3 playerPosition = reader.GetVector3();
-			PlayerSnapshotData playerData = new PlayerSnapshotData(playerId, playerPosition);
+			Team team = (Team)reader.GetInteger();
+			PlayerSnapshotData playerData = new PlayerSnapshotData(playerId, playerPosition, team);
 			playersData.Add(playerData);
 		}
 
@@ -59,11 +61,13 @@ public struct PlayerSnapshotData
 	public int playerId;
 	public Vector3 position;
 	public uint tickIndex;
+	public Team team;
 
-	public PlayerSnapshotData(int playerId, Vector3 position)
+	public PlayerSnapshotData(int playerId, Vector3 position, Team team)
 	{
 		this.playerId = playerId;
 		this.position = position;
+		this.team = team;
 		this.tickIndex = 0;
 	}
 }

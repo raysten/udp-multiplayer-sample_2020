@@ -21,7 +21,7 @@ public class RemotePlayer : Player, IRemoteEntity
 		_entity.EnqueuePosition(position, tickIndex);
 	}
 
-	public class Factory : PlaceholderFactory<float, RemotePlayer>
+	public class Factory : PlaceholderFactory<Team, RemotePlayer>
 	{
 	}
 }

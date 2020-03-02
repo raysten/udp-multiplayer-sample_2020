@@ -34,7 +34,7 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 			_client.LocalPlayerId = message.playerId;
 			_client.IsConnected = true;
 			_client.SetServerEndpoint(message.Sender);
-			_playerRegistry.RegisterPlayer(_spawner.SpawnControlledPlayer(), message.playerId);
+			_playerRegistry.RegisterPlayer(_spawner.SpawnControlledPlayer(message.team), message.playerId);
 			_events.LocalPlayerSpawned?.Invoke();
 		}
     }
