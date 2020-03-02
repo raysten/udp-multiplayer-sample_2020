@@ -7,6 +7,7 @@ public class LocalClient : IInitializable
 	private MessageSerializer _serializer;
 	private MessageProcessor _messageProcessor;
 	private PortFinder _portFinder;
+	private Server.Settings _settings;
 
 	private IPEndPoint _serverEndpoint;
 
@@ -16,22 +17,29 @@ public class LocalClient : IInitializable
 	public LocalClient(
 		MessageSerializer serializer,
 		MessageProcessor messageProcessor,
-		PortFinder portFinder
+		PortFinder portFinder,
+		Server.Settings settings
 	)
 	{
 		_serializer = serializer;
 		_messageProcessor = messageProcessor;
 		_portFinder = portFinder;
+		_settings = settings;
 	}
 
 	public void Initialize()
 	{
-		_connection = new UdpConnection(_portFinder.GetAvailablePort(54000));
+		_connection = new UdpConnection(_portFinder.GetAvailablePort(_settings.port + 10));
 	}
 
 	public void SetServerEndpoint(IPAddress ip, int port)
 	{
 		_serverEndpoint = new IPEndPoint(ip, port);
+	}
+
+	public void SetServerEndpoint(IPEndPoint endpoint)
+	{
+		_serverEndpoint = endpoint;
 	}
 
 	public void SendMessage(IUdpMessage message)
@@ -40,12 +48,11 @@ public class LocalClient : IInitializable
 		_connection.Send(_serverEndpoint, bytes);
 	}
 
-	public void SendHandshakeMessage(IPAddress ip, int port)
+	public void SendHandshakeMessage()
 	{
-		SetServerEndpoint(ip, port);
 		var message = new HandshakeMessage();
 		var bytes = _serializer.SerializeMessage(message);
-		_connection.Send(_serverEndpoint, bytes);
+		_connection.Send(new IPEndPoint(IPAddress.Broadcast, _settings.port), bytes);
 		_connection.Listen(OnMessageReceived);
 	}
 

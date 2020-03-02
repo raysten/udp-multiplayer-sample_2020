@@ -33,6 +33,7 @@ public class SpawnPlayerMessageHandler : BaseHandler<SpawnPlayerMessage>
 			_loop.TickIndex = message.TickIndex + 5;
 			_client.LocalPlayerId = message.playerId;
 			_client.IsConnected = true;
+			_client.SetServerEndpoint(message.Sender);
 			_playerRegistry.RegisterPlayer(_spawner.SpawnControlledPlayer(), message.playerId);
 			_events.LocalPlayerSpawned?.Invoke();
 		}

@@ -22,8 +22,6 @@ public class ConnectionGUI : IInitializable, IDisposable
 	public void Initialize()
 	{
 		_connectionButton.onClick.AddListener(Connect);
-		_inputField.text = "192.168.43.235:54120";
-
 		_events.LocalPlayerSpawned += OnLocalPlayerSpawned;
 	}
 
@@ -37,12 +35,9 @@ public class ConnectionGUI : IInitializable, IDisposable
 		HideGUI();
 	}
 
-	// TODO: Error handling. Currently I assume correct ip and port.
 	private void Connect()
 	{
-		string[] split = _inputField.text.Split(':');
-		IPAddress ipAddress = IPAddress.Parse(split[0]);
-		_client.SendHandshakeMessage(ipAddress, int.Parse(split[1]));
+		_client.SendHandshakeMessage();
 	}
 
 	private void HideGUI()
