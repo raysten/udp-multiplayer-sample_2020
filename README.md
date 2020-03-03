@@ -15,7 +15,7 @@ The game should be player on a local network.
 ## Features
 
 * Authoritative server,
-* Client-side prediction,
+* Client-side prediction and server reconcilation,
 * Entity interpolation.
 
 I've tried to follow some concepts from Overwatch's netcode, so client runs ahead of server and changes its tick rate when it goes out of sync with server.
